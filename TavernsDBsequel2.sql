@@ -6,7 +6,7 @@ DROP table IF EXISTS tavernName, locationAddress, OwnerUserName, RoleOwners, Flo
 USE taverns_db;
 
 CREATE TABLE tavernName (
-	idTavern int NOT NULL AUTO_INCREMENT,
+	idTavern int IDENTITY(1,1) PRIMARY KEY,
     nameTavern VARCHAR(100),
     idLocation int,
     idOwner int,
@@ -25,7 +25,7 @@ INSERT INTO tavernName (nameTavern)
         ("Carl's Tavern");
 
 CREATE TABLE locationAddress (
-	idLocation int NOT NULL AUTO_INCREMENT,
+	idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
     idTavern int,
     idOwner int,
@@ -44,7 +44,7 @@ INSERT INTO locationAddrss (locAddress)
         ("500 Main");
 
 CREATE TABLE OwnerUserName (
-	idOwner int NOT NULL AUTO_INCREMENT,
+	idOwner int IDENTITY(1,1) PRIMARY KEY,
     userName VARCHAR(100),
     idRole int
     -- PRIMARY KEY (idOwner)
@@ -61,7 +61,7 @@ INSERT INTO OwnerUserName (userName)
         ("Carl");
 
 CREATE TABLE RoleOwners (
-    idRole int NOT NULL AUTO_INCREMENT,
+    idRole int IDENTITY(1,1) PRIMARY KEY,
     RoleName VARCHAR(100),
     RoleDescription VARCHAR(500),
     idOwner int
@@ -76,7 +76,7 @@ INSERT INTO RoleOwners (RoleName)
         ("Janitor");
 
 CREATE TABLE Floors (
-    idFloors int NOT NULL AUTO_INCREMENT,
+    idFloors int IDENTITY(1,1) PRIMARY KEY,
     NumberofFloors int,
     idLocation int
 );
@@ -90,7 +90,7 @@ INSERT INTO Floors (NumberofFloors)
         (5);
 
 CREATE TABLE Rats (
-    idRats int NOT NULL AUTO_INCREMENT,
+    idRats int IDENTITY(1,1) PRIMARY KEY,
     RatName VARCHAR(100),
     idLocation int,
     idTavern int
@@ -105,7 +105,7 @@ INSERT INTO Rats (RatName)
         ("Scabbers");
 
 CREATE TABLE Supplies (
-    idSupplies int NOT NULL AUTO_INCREMENT,
+    idSupplies int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
     SupplyCount int,
@@ -117,7 +117,7 @@ INSERT INTO Supplies (SupplyDate)
         ("")
 
 CREATE TABLE SuppliesRecieved (
-    idSuppliesRecieved int NOT NULL AUTO_INCREMENT,
+    idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
     idSupplies int,
     idTavern int,
     idLocation int,
@@ -127,19 +127,19 @@ CREATE TABLE SuppliesRecieved (
 );
 
 CREATE TABLE Services (
-    idServices int NOT NULL AUTO_INCREMENT,
+    idServices int IDENTITY(1,1) PRIMARY KEY,
     ServiceName VARCHAR(100),
 
 )
 
 CREATE TABLE ServiceStatus (
-    idServicesStatus int NOT NULL AUTO_INCREMENT,
+    idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
     StatusofService BOOLEAN,
     idServices int,
 );
 
 CREATE TABLE Sales (
-    idSales int NOT NULL AUTO_INCREMENT,
+    idSales int IDENTITY(1,1) PRIMARY KEY,
     idServices int,
     GuestName VARCHAR(100),
     Price DECIMAL(5,2),
