@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS tavernName, locationAddress, OwnerUserName, RoleOwners, Flo
 
 
 CREATE TABLE tavernName (
-	idTavern int IDENTITY(1,1) PRIMARY KEY,
+    idTavern int IDENTITY(1,1) PRIMARY KEY,
     nameTavern VARCHAR(100),
     idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
     idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
@@ -15,7 +15,7 @@ CREATE TABLE tavernName (
 );
 
 CREATE TABLE locationAddress (
-	idLocation int IDENTITY(1,1) PRIMARY KEY,
+    idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
     idTavern int FOREIGN KEY REFERENCES tavernName(idTavern),
     idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
@@ -23,7 +23,7 @@ CREATE TABLE locationAddress (
 );
 
 CREATE TABLE OwnerUserName (
-	idOwner int IDENTITY(1,1) PRIMARY KEY,
+    idOwner int IDENTITY(1,1) PRIMARY KEY,
     userName VARCHAR(100),
     idRole int FOREIGN KEY REFERENCES RoleOwners(idRole),
     idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
