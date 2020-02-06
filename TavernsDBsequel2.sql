@@ -12,9 +12,6 @@ CREATE TABLE tavernName (
     idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
     idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
     idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies)
-    -- PRIMARY KEY (idTavern)
-    -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
-    -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
 CREATE TABLE locationAddress (
@@ -23,9 +20,6 @@ CREATE TABLE locationAddress (
     idTavern int FOREIGN KEY REFERENCES tavernName(idTavern),
     idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
     idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies)
-    -- PRIMARY KEY (idLocation)
-    -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern),
-    -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
 CREATE TABLE OwnerUserName (
@@ -34,9 +28,6 @@ CREATE TABLE OwnerUserName (
     idRole int FOREIGN KEY REFERENCES RoleOwners(idRole),
     idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
     idTavern int FOREIGN KEY REFERENCES tavernName(idTavern)
-    -- PRIMARY KEY (idOwner)
-    -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
-    -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern)
 );
 
 CREATE TABLE RoleOwners (
