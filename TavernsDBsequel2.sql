@@ -218,14 +218,14 @@ INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
         CONVERT(DATETIME, '05/22/2013 00:00:00'),
         10);
 
-SELECT * FROM tavernName ORDER BY id DESC;
-SELECT * FROM locationAddress ORDER BY id DESC;
-SELECT * FROM OwnerUserName ORDER BY id DESC;
-SELECT * FROM RoleOwners ORDER BY id DESC;
-SELECT * FROM Floors ORDER BY id DESC;
-SELECT * FROM Rats ORDER BY id DESC;
-SELECT * FROM Supplies ORDER BY id DESC;
-SELECT * FROM SuppliesRecieved ORDER BY id DESC;
-SELECT * FROM Services ORDER BY id DESC;
-SELECT * FROM ServiceStatus ORDER BY id DESC;
-SELECT * FROM Sales ORDER BY id DESC;
+SELECT * FROM tavernName ORDER BY idTavern DESC;
+SELECT * FROM locationAddress ORDER BY idLocation DESC;
+SELECT * FROM OwnerUserName ORDER BY idOwner DESC;
+SELECT * FROM RoleOwners ORDER BY idRole DESC;
+SELECT * FROM Floors ORDER BY idFloors DESC;
+SELECT * FROM Rats ORDER BY idRats DESC;
+SELECT * FROM Supplies ORDER BY idSupplies DESC;
+SELECT * FROM SuppliesRecieved ORDER BY idSuppliesRecieved DESC;
+SELECT * FROM Services ORDER BY idServices DESC;
+SELECT * FROM ServiceStatus ORDER BY idServiceStatus DESC;
+SELECT * FROM Sales ORDER BY idSales DESC;
