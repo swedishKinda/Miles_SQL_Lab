@@ -16,14 +16,6 @@ CREATE TABLE tavernName (
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
-INSERT INTO tavernName (nameTavern)
-    VALUES
-        ("Bob's Tavern"),
-        ("Bill's Tavern"),
-        ("Stephanie's Tavern"),
-        ("Phil's Tavern"),
-        ("Carolyn's Tavern");
-
 CREATE TABLE locationAddress (
 	idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
@@ -35,14 +27,6 @@ CREATE TABLE locationAddress (
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
-INSERT INTO locationAddress (locAddress)
-    VALUES
-        ("100 Main"),
-        ("200 Main"),
-        ("300 Main"),
-        ("400 Main"),
-        ("500 Main");
-
 CREATE TABLE OwnerUserName (
 	idOwner int IDENTITY(1,1) PRIMARY KEY,
     userName VARCHAR(100),
@@ -52,6 +36,81 @@ CREATE TABLE OwnerUserName (
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern)
 );
 
+CREATE TABLE RoleOwners (
+    idRole int IDENTITY(1,1) PRIMARY KEY,
+    RoleName VARCHAR(100),
+    RoleDescription VARCHAR(500),
+    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies)
+);
+
+CREATE TABLE Floors (
+    idFloors int IDENTITY(1,1) PRIMARY KEY,
+    NumberofFloors int,
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
+);
+
+CREATE TABLE Rats (
+    idRats int IDENTITY(1,1) PRIMARY KEY,
+    RatName VARCHAR(100),
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
+);
+
+CREATE TABLE Supplies (
+    idSupplies int IDENTITY(1,1) PRIMARY KEY,
+    SupplyDate DATETIME,
+    NameSupply VARCHAR(100),
+    SupplyCount int,
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
+);
+
+CREATE TABLE SuppliesRecieved (
+    idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
+    idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    Cost DECIMAL(38,2),
+    AmountReceived int,
+    RecievedDate DATETIME
+);
+
+CREATE TABLE Services (
+    idServices int IDENTITY(1,1) PRIMARY KEY,
+    ServiceName VARCHAR(100),
+);
+
+CREATE TABLE ServiceStatus (
+    idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
+    StatusofService BOOLEAN,
+    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
+);
+
+CREATE TABLE Sales (
+    idSales int IDENTITY(1,1) PRIMARY KEY,
+    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    GuestName VARCHAR(100),
+    Price DECIMAL(5,2),
+    DatePurchased DATETIME,
+    AmountPurchased int,
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
+);
+
+INSERT INTO tavernName (nameTavern)
+    VALUES
+        ("Bob's Tavern"),
+        ("Bill's Tavern"),
+        ("Stephanie's Tavern"),
+        ("Phil's Tavern"),
+        ("Carolyn's Tavern");
+
+INSERT INTO locationAddress (locAddress)
+    VALUES
+        ("100 Main"),
+        ("200 Main"),
+        ("300 Main"),
+        ("400 Main"),
+        ("500 Main");
+
 INSERT INTO OwnerUserName (userName)
     VALUES
         ("Bob"),
@@ -59,13 +118,6 @@ INSERT INTO OwnerUserName (userName)
         ("Will"),
         ("Phil"),
         ("Carl");
-
-CREATE TABLE RoleOwners (
-    idRole int IDENTITY(1,1) PRIMARY KEY,
-    RoleName VARCHAR(100),
-    RoleDescription VARCHAR(500),
-    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies)
-);
 
 INSERT INTO RoleOwners (RoleName)
     VALUES
@@ -75,12 +127,6 @@ INSERT INTO RoleOwners (RoleName)
         ("Vice President"),
         ("Janitor");
 
-CREATE TABLE Floors (
-    idFloors int IDENTITY(1,1) PRIMARY KEY,
-    NumberofFloors int,
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
-);
-
 INSERT INTO Floors (NumberofFloors)
     VALUES
         (1),
@@ -89,13 +135,6 @@ INSERT INTO Floors (NumberofFloors)
         (4),
         (5);
 
-CREATE TABLE Rats (
-    idRats int IDENTITY(1,1) PRIMARY KEY,
-    RatName VARCHAR(100),
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
-);
-
 INSERT INTO Rats (RatName)
     VALUES
         ("Remy"),
@@ -103,14 +142,6 @@ INSERT INTO Rats (RatName)
         ("Templeton"),
         ("Rattie"),
         ("Scabbers");
-
-CREATE TABLE Supplies (
-    idSupplies int IDENTITY(1,1) PRIMARY KEY,
-    SupplyDate DATETIME,
-    NameSupply VARCHAR(100),
-    SupplyCount int,
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
-);
 
 INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount)
     VALUES 
@@ -130,16 +161,6 @@ INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount)
          "Meatballs",
          60);
 
-CREATE TABLE SuppliesRecieved (
-    idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
-    idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    Cost DECIMAL(38,2),
-    AmountReceived int,
-    RecievedDate DATETIME
-);
-
 INSERT INTO SuppliesRecieved (Cost, AmountReceived, RecievedDate)
     VALUES
         (22.22, 
@@ -158,11 +179,6 @@ INSERT INTO SuppliesRecieved (Cost, AmountReceived, RecievedDate)
          77, 
          CONVERT(DATETIME, "12/19/2012 00:00:00"));
 
-CREATE TABLE Services (
-    idServices int IDENTITY(1,1) PRIMARY KEY,
-    ServiceName VARCHAR(100),
-);
-
 INSERT INTO Services (ServiceName)
     VALUES
         ("Pool"),
@@ -171,12 +187,6 @@ INSERT INTO Services (ServiceName)
         ("Skeet"),
         ("VolleyBall");
 
-CREATE TABLE ServiceStatus (
-    idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
-    StatusofService BOOLEAN,
-    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
-);
-
 INSERT INTO ServiceStatus (StatusofService)
     VALUES
         (true),
@@ -184,17 +194,6 @@ INSERT INTO ServiceStatus (StatusofService)
         (true),
         (false),
         (false);
-
-
-CREATE TABLE Sales (
-    idSales int IDENTITY(1,1) PRIMARY KEY,
-    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    GuestName VARCHAR(100),
-    Price DECIMAL(5,2),
-    DatePurchased DATETIME,
-    AmountPurchased int,
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
-);
 
 INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
     VALUES
