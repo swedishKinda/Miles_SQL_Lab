@@ -8,9 +8,9 @@ USE taverns_db;
 CREATE TABLE tavernName (
 	idTavern int IDENTITY(1,1) PRIMARY KEY,
     nameTavern VARCHAR(100),
-    idLocation int,
-    idOwner int,
-    idSupplies int
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
+    idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
+    idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies)
     -- PRIMARY KEY (idTavern)
     -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
@@ -27,15 +27,15 @@ INSERT INTO tavernName (nameTavern)
 CREATE TABLE locationAddress (
 	idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
-    idTavern int,
-    idOwner int,
-    idSupplies int
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies)
     -- PRIMARY KEY (idLocation)
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern),
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
-INSERT INTO locationAddrss (locAddress)
+INSERT INTO locationAddress (locAddress)
     VALUES
         ("100 Main"),
         ("200 Main"),
@@ -46,7 +46,7 @@ INSERT INTO locationAddrss (locAddress)
 CREATE TABLE OwnerUserName (
 	idOwner int IDENTITY(1,1) PRIMARY KEY,
     userName VARCHAR(100),
-    idRole int
+    idRole int FOREIGN KEY REFERENCES Supplies(idSupplies)
     -- PRIMARY KEY (idOwner)
     -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern)
@@ -64,7 +64,7 @@ CREATE TABLE RoleOwners (
     idRole int IDENTITY(1,1) PRIMARY KEY,
     RoleName VARCHAR(100),
     RoleDescription VARCHAR(500),
-    idOwner int
+    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies)
 );
 
 INSERT INTO RoleOwners (RoleName)
@@ -78,7 +78,7 @@ INSERT INTO RoleOwners (RoleName)
 CREATE TABLE Floors (
     idFloors int IDENTITY(1,1) PRIMARY KEY,
     NumberofFloors int,
-    idLocation int
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
 );
 
 INSERT INTO Floors (NumberofFloors)
@@ -92,8 +92,8 @@ INSERT INTO Floors (NumberofFloors)
 CREATE TABLE Rats (
     idRats int IDENTITY(1,1) PRIMARY KEY,
     RatName VARCHAR(100),
-    idLocation int,
-    idTavern int
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
 );
 
 INSERT INTO Rats (RatName)
@@ -109,18 +109,18 @@ CREATE TABLE Supplies (
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
     SupplyCount int,
-    idLocation int
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
 );
 
-INSERT INTO Supplies (SupplyDate)
+INSERT INTO Supplies (SupplyDate, NameSupply, )
     VALUES
         ("")
 
 CREATE TABLE SuppliesRecieved (
     idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
-    idSupplies int,
-    idTavern int,
-    idLocation int,
+    idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
     Cost DECIMAL(38,2),
     AmountReceived int,
     RecievedDate DATETIME
@@ -129,22 +129,21 @@ CREATE TABLE SuppliesRecieved (
 CREATE TABLE Services (
     idServices int IDENTITY(1,1) PRIMARY KEY,
     ServiceName VARCHAR(100),
-
-)
+);
 
 CREATE TABLE ServiceStatus (
     idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
     StatusofService BOOLEAN,
-    idServices int,
+    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
 );
 
 CREATE TABLE Sales (
     idSales int IDENTITY(1,1) PRIMARY KEY,
-    idServices int,
+    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
     GuestName VARCHAR(100),
     Price DECIMAL(5,2),
     DatePurchased DATETIME,
     AmountPurchased int,
-    idTavern int
+    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
 );
 
