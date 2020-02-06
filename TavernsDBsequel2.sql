@@ -1,5 +1,5 @@
--- DROP DATABASE IF EXISTS taverns_db;
--- CREATE DATABASE taverns_db;
+DROP DATABASE IF EXISTS taverns_db;
+CREATE DATABASE taverns_db;
 
 USE taverns_db;
 
