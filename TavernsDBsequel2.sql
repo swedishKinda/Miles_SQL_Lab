@@ -18,11 +18,11 @@ CREATE TABLE tavernName (
 
 INSERT INTO tavernName (nameTavern)
     VALUES
-        ("Bob's Tavern"),
-        ("Bill's Tavern"),
-        ("Will's Tavern"),
-        ("Phil's Tavern"),
-        ("Carl's Tavern");
+        ("Bob's Tavern",
+        "Bill's Tavern",
+        "Will's Tavern",
+        "Phil's Tavern",
+        "Carl's Tavern");
 
 CREATE TABLE locationAddress (
 	idLocation int IDENTITY(1,1) PRIMARY KEY,
@@ -37,11 +37,11 @@ CREATE TABLE locationAddress (
 
 INSERT INTO locationAddress (locAddress)
     VALUES
-        ("100 Main"),
-        ("200 Main"),
-        ("300 Main"),
-        ("400 Main"),
-        ("500 Main");
+        ("100 Main",
+        "200 Main",
+        "300 Main",
+        "400 Main",
+        "500 Main");
 
 CREATE TABLE OwnerUserName (
 	idOwner int IDENTITY(1,1) PRIMARY KEY,
@@ -54,11 +54,11 @@ CREATE TABLE OwnerUserName (
 
 INSERT INTO OwnerUserName (userName)
     VALUES
-        ("Bob"),
-        ("Bill"),
-        ("Will"),
-        ("Phil"),
-        ("Carl");
+        ("Bob",
+        "Bill",
+        "Will",
+        "Phil",
+        "Carl");
 
 CREATE TABLE RoleOwners (
     idRole int IDENTITY(1,1) PRIMARY KEY,
@@ -69,11 +69,11 @@ CREATE TABLE RoleOwners (
 
 INSERT INTO RoleOwners (RoleName)
     VALUES
-        ("COO"),
-        ("CFO"),
-        ("President"),
-        ("Vice President"),
-        ("Janitor");
+        ("COO",
+        "CFO",
+        "President",
+        "Vice President",
+        "Janitor");
 
 CREATE TABLE Floors (
     idFloors int IDENTITY(1,1) PRIMARY KEY,
@@ -83,11 +83,11 @@ CREATE TABLE Floors (
 
 INSERT INTO Floors (NumberofFloors)
     VALUES
-        (1),
-        (2),
-        (3),
-        (4),
-        (5);
+        (1,
+        2,
+        3,
+        4,
+        5);
 
 CREATE TABLE Rats (
     idRats int IDENTITY(1,1) PRIMARY KEY,
@@ -98,11 +98,11 @@ CREATE TABLE Rats (
 
 INSERT INTO Rats (RatName)
     VALUES
-        ("Remy"),
-        ("Samuel Whiskers"),
-        ("Templeton"),
-        ("Rattie"),
-        ("Scabbers");
+        ("Remy",
+        "Samuel Whiskers",
+        "Templeton",
+        "Rattie",
+        "Scabbers");
 
 CREATE TABLE Supplies (
     idSupplies int IDENTITY(1,1) PRIMARY KEY,
@@ -114,7 +114,7 @@ CREATE TABLE Supplies (
 
 INSERT INTO Supplies (SupplyDate, NameSupply, )
     VALUES
-        ("")
+        -- (")
 
 CREATE TABLE SuppliesRecieved (
     idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
