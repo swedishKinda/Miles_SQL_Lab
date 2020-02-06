@@ -1,9 +1,10 @@
-DROP DATABASE IF EXISTS taverns_db;
-CREATE DATABASE taverns_db;
-
-DROP table IF EXISTS tavernName, locationAddress, OwnerUserName, RoleOwners, Floors, Rats, Supplies, SuppliesRecieved, Services, ServiceStatus, Sales;
+-- DROP DATABASE IF EXISTS taverns_db;
+-- CREATE DATABASE taverns_db;
 
 USE taverns_db;
+
+DROP TABLE IF EXISTS tavernName, locationAddress, OwnerUserName, RoleOwners, Floors, Rats, Supplies, SuppliesRecieved, Services, ServiceStatus, Sales;
+
 
 CREATE TABLE tavernName (
 	idTavern int IDENTITY(1,1) PRIMARY KEY,
@@ -19,8 +20,8 @@ CREATE TABLE tavernName (
 CREATE TABLE locationAddress (
 	idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES tavernName(idTavern),
+    idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner),
     idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies)
     -- PRIMARY KEY (idLocation)
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern),
@@ -30,7 +31,9 @@ CREATE TABLE locationAddress (
 CREATE TABLE OwnerUserName (
 	idOwner int IDENTITY(1,1) PRIMARY KEY,
     userName VARCHAR(100),
-    idRole int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idRole int FOREIGN KEY REFERENCES RoleOwners(idRole),
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
+    idTavern int FOREIGN KEY REFERENCES tavernName(idTavern)
     -- PRIMARY KEY (idOwner)
     -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern)
@@ -40,20 +43,20 @@ CREATE TABLE RoleOwners (
     idRole int IDENTITY(1,1) PRIMARY KEY,
     RoleName VARCHAR(100),
     RoleDescription VARCHAR(500),
-    idOwner int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idOwner int FOREIGN KEY REFERENCES OwnerUserName(idOwner)
 );
 
 CREATE TABLE Floors (
     idFloors int IDENTITY(1,1) PRIMARY KEY,
     NumberofFloors int,
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation)
 );
 
 CREATE TABLE Rats (
     idRats int IDENTITY(1,1) PRIMARY KEY,
     RatName VARCHAR(100),
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
+    idTavern int FOREIGN KEY REFERENCES tavernName(idTavern)
 );
 
 CREATE TABLE Supplies (
@@ -61,14 +64,14 @@ CREATE TABLE Supplies (
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
     SupplyCount int,
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation)
 );
 
 CREATE TABLE SuppliesRecieved (
     idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
     idSupplies int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    idLocation int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idTavern int FOREIGN KEY REFERENCES tavernName(idTavern),
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation),
     Cost DECIMAL(38,2),
     AmountReceived int,
     RecievedDate DATETIME
@@ -77,12 +80,13 @@ CREATE TABLE SuppliesRecieved (
 CREATE TABLE Services (
     idServices int IDENTITY(1,1) PRIMARY KEY,
     ServiceName VARCHAR(100),
+    idLocation int FOREIGN KEY REFERENCES locationAddress(idLocation)
 );
 
 CREATE TABLE ServiceStatus (
     idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
     StatusofService BOOLEAN,
-    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
+    idServices int FOREIGN KEY REFERENCES Services(idServices)
 );
 
 CREATE TABLE Sales (
@@ -92,7 +96,7 @@ CREATE TABLE Sales (
     Price DECIMAL(5,2),
     DatePurchased DATETIME,
     AmountPurchased int,
-    idTavern int FOREIGN KEY REFERENCES Supplies(idSupplies)
+    idTavern int FOREIGN KEY REFERENCES tavernName(idTavern)
 );
 
 INSERT INTO tavernName (nameTavern)
