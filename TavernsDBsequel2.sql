@@ -6,92 +6,145 @@ DROP table IF EXISTS tavernName, locationAddress, OwnerUserName, RoleOwners, Flo
 USE taverns_db;
 
 CREATE TABLE tavernName (
-	idTavern INTEGER NOT NULL AUTO_INCREMENT,
+	idTavern int NOT NULL AUTO_INCREMENT,
     nameTavern VARCHAR(100),
-    idLocation INTEGER,
-    idOwner INTEGER,
-    idSupplies INTEGER
+    idLocation int,
+    idOwner int,
+    idSupplies int
     -- PRIMARY KEY (idTavern)
     -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
+INSERT INTO tavernName (nameTavern)
+    VALUES
+        ("Bob's Tavern"),
+        ("Bill's Tavern"),
+        ("Will's Tavern"),
+        ("Phil's Tavern"),
+        ("Carl's Tavern");
+
 CREATE TABLE locationAddress (
-	idLocation INTEGER NOT NULL AUTO_INCREMENT,
+	idLocation int NOT NULL AUTO_INCREMENT,
     locAddress VARCHAR(100),
-    idTavern INTEGER,
-    idOwner INTEGER,
-    idSupplies INTEGER
+    idTavern int,
+    idOwner int,
+    idSupplies int
     -- PRIMARY KEY (idLocation)
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern),
     -- FOREIGN KEY (idOwner) REFERENCES OwnerName(idOwner)
 );
 
+INSERT INTO locationAddrss (locAddress)
+    VALUES
+        ("100 Main"),
+        ("200 Main"),
+        ("300 Main"),
+        ("400 Main"),
+        ("500 Main");
+
 CREATE TABLE OwnerUserName (
-	idOwner INTEGER NOT NULL AUTO_INCREMENT,
+	idOwner int NOT NULL AUTO_INCREMENT,
     userName VARCHAR(100),
-    idRole INTEGER
+    idRole int
     -- PRIMARY KEY (idOwner)
     -- FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation),
     -- FOREIGN KEY (idTavern) REFERENCES tavernName(idTavern)
 );
 
+INSERT INTO OwnerUserName (userName)
+    VALUES
+        ("Bob"),
+        ("Bill"),
+        ("Will"),
+        ("Phil"),
+        ("Carl");
+
 CREATE TABLE RoleOwners (
-    idRole INTEGER NOT NULL AUTO_INCREMENT,
+    idRole int NOT NULL AUTO_INCREMENT,
     RoleName VARCHAR(100),
     RoleDescription VARCHAR(500),
-    idOwner INTEGER
+    idOwner int
 );
+
+INSERT INTO RoleOwners (RoleName)
+    VALUES
+        ("COO"),
+        ("CFO"),
+        ("President"),
+        ("Vice President"),
+        ("Janitor");
 
 CREATE TABLE Floors (
-    idFloors INTEGER NOT NULL AUTO_INCREMENT,
-    NumberofFloors INTEGER,
-    idLocation INTEGER
+    idFloors int NOT NULL AUTO_INCREMENT,
+    NumberofFloors int,
+    idLocation int
 );
+
+INSERT INTO Floors (NumberofFloors)
+    VALUES
+        (1),
+        (2),
+        (3),
+        (4),
+        (5);
 
 CREATE TABLE Rats (
-    idRats INTEGER NOT NULL AUTO_INCREMENT,
+    idRats int NOT NULL AUTO_INCREMENT,
     RatName VARCHAR(100),
-    idLocation INTEGER,
-    idTavern INTEGER
+    idLocation int,
+    idTavern int
 );
+
+INSERT INTO Rats (RatName)
+    VALUES
+        ("Remy"),
+        ("Samuel Whiskers"),
+        ("Templeton"),
+        ("Rattie"),
+        ("Scabbers");
 
 CREATE TABLE Supplies (
-    idSupplies INTEGER NOT NULL AUTO_INCREMENT,
+    idSupplies int NOT NULL AUTO_INCREMENT,
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
-    SupplyCount INTEGER,
-    idLocation INTEGER
+    SupplyCount int,
+    idLocation int
 );
 
+INSERT INTO Supplies (SupplyDate)
+    VALUES
+        ("")
+
 CREATE TABLE SuppliesRecieved (
-    idSuppliesRecieved INTEGER NOT NULL AUTO_INCREMENT,
-    idSupplies INTEGER,
-    idTavern INTEGER,
-    idLocation INTEGER,
+    idSuppliesRecieved int NOT NULL AUTO_INCREMENT,
+    idSupplies int,
+    idTavern int,
+    idLocation int,
     Cost DECIMAL(38,2),
-    AmountReceived INTEGER,
+    AmountReceived int,
     RecievedDate DATETIME
 );
 
 CREATE TABLE Services (
-    idServices INTEGER NOT NULL AUTO_INCREMENT,
+    idServices int NOT NULL AUTO_INCREMENT,
     ServiceName VARCHAR(100),
 
 )
 
 CREATE TABLE ServiceStatus (
-    idServicesStatus INTEGER NOT NULL AUTO_INCREMENT,
+    idServicesStatus int NOT NULL AUTO_INCREMENT,
     StatusofService BOOLEAN,
-    idServices INTEGER,
+    idServices int,
 );
 
 CREATE TABLE Sales (
-    idSales INTEGER NOT NULL AUTO_INCREMENT,
-    idServices INTEGER,
+    idSales int NOT NULL AUTO_INCREMENT,
+    idServices int,
     GuestName VARCHAR(100),
     Price DECIMAL(5,2),
     DatePurchased DATETIME,
-    AmountPurchased INTEGER,
-    idTaver INTEGER
+    AmountPurchased int,
+    idTavern int
 );
+
