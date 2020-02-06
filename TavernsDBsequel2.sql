@@ -149,19 +149,21 @@ INSERT INTO Rats (RatName)
 
 INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount)
     VALUES 
-        (CONVERT(DATETIME, "11/16/2012 00:00:00"), "Peanuts", 22),
-        (CONVERT(DATETIME, "11/16/2012 00:00:00"), "Pistachios", 45),
-        (CONVERT(DATETIME, "11/16/2012 00:00:00"), "Chips", 50),
-        (CONVERT(DATETIME, "11/16/2012 00:00:00"), "Fish", 40),
-        (CONVERT(DATETIME, "11/16/2012 00:00:00"), "Meatballs", 60);
+        ("11/16/2012 00:00:00", "Peanuts", 22),
+        ("11/16/2012 00:00:00", "Pistachios", 45),
+        ("11/16/2012 00:00:00", "Chips", 50),
+        ("11/16/2012 00:00:00", "Fish", 40),
+        ("11/16/2012 00:00:00", "Meatballs", 60);
 
 INSERT INTO SuppliesRecieved (Cost, AmountReceived, RecievedDate)
     VALUES
-        (22.22, 22, CONVERT(DATETIME, "12/19/2012 00:00:00")),
-        (44.44, 44, CONVERT(DATETIME, "12/19/2012 00:00:00")),
-        (55.55, 55, CONVERT(DATETIME, "12/19/2012 00:00:00")),
-        (66.66, 66, CONVERT(DATETIME, "12/19/2012 00:00:00")),
-        (77.77, 77, CONVERT(DATETIME, "12/19/2012 00:00:00"));
+        -- (22.22, 22, CONVERT(DATETIME, "12/19/2012 00:00:00")),
+                
+        (22.22, 22, "12/19/2012 00:00:00"),
+        (44.44, 44, "12/19/2012 00:00:00"),
+        (55.55, 55, "12/19/2012 00:00:00"),
+        (66.66, 66, "12/19/2012 00:00:00"),
+        (77.77, 77, "12/19/2012 00:00:00");
 
 INSERT INTO Services (ServiceName)
     VALUES
@@ -181,11 +183,11 @@ INSERT INTO ServiceStatus (StatusofService)
 
 INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
     VALUES
-        ("Dilan Bob", 22.22, CONVERT(DATETIME, '05/22/2013 00:00:00'), 10),
-        ("Stuart Bib", 22.22, CONVERT(DATETIME, '05/22/2013 00:00:00'), 10),
-        ("Macho Man", 22.22, CONVERT(DATETIME, '05/22/2013 00:00:00'), 10),
-        ("Jessica Collins", 22.22, CONVERT(DATETIME, '05/22/2013 00:00:00'), 10),
-        ("Milton Bradley", 22.22, CONVERT(DATETIME, '05/22/2013 00:00:00'), 10);
+        ("Dilan Bob", 22.22, "05/22/2013 00:00:00", 10),
+        ("Stuart Bib", 22.22, "05/22/2013 00:00:00", 10),
+        ("Macho Man", 22.22, "05/22/2013 00:00:00", 10),
+        ("Jessica Collins", 22.22, "05/22/2013 00:00:00", 10),
+        ("Milton Bradley", 22.22, "05/22/2013 00:00:00", 10);
 
 SELECT * FROM tavernName ORDER BY idTavern DESC;
 SELECT * FROM locationAddress ORDER BY idLocation DESC;
