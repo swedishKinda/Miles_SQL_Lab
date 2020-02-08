@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Sales, taverns, locationAddress, OwnerUserName, RoleOwners, Floors, Supplies, SuppliesRecieved, Services, ServiceStatus;
+DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, taverns, locationAddress, OwnerUserName, RoleOwners, Floors, Supplies, SuppliesRecieved, Services, ServiceStatus;
 
 
 CREATE TABLE taverns (
@@ -60,6 +60,30 @@ CREATE TABLE Sales (
     AmountPurchased int,
     idTavern int FOREIGN KEY REFERENCES taverns(idTavern)
 );
+
+CREATE TABLE Guests (
+    idGuests int IDENTITY(1,1) PRIMARY KEY,
+    NameGuest VARCHAR(250),
+    Notes VARCHAR(Max),
+    Birthday DATE,
+    CakeDay DATE,
+);
+
+CREATE TABLE GuestStatuses (
+    idGuestStatuses tinyint IDENTITY(1,1) PRIMARY KEY,
+    NameGuestStatus VARCHAR(50)
+);
+
+CREATE TABLE Levels (
+    idLevels tinyint IDENTITY(1,1) PRIMARY KEY,
+    DateLevel DATE
+);
+
+CREATE TABLE Classes (
+    idClasses tinyint IDENTITY(1,1) PRIMARY KEY,
+    NameClass VARCHAR (50)
+);
+
 
 INSERT INTO taverns (nameTavern)
     VALUES
@@ -143,6 +167,38 @@ INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
         ('Jessica Collins', 22.22, '05/22/2013 00:00:00', 10),
         ('Milton Bradley', 22.22, '05/22/2013 00:00:00', 10);
 
+INSERT INTO Guests (NameGuest, Notes, Birthday, CakeDay)
+	Values
+		('William Tate', 'Hes Cool', '03/10/1967', '05/08/2000'),
+		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2000'),
+		('Dario Weaver', 'More stuff', '06/15/1966', '06/08/2000'),
+		('Ahyan Hopkins', 'More more stuff', '05/10/1962', '05/12/2000'),
+		('Myrtle Klein', 'More more more stuff', '03/16/1972', '05/22/2000');
+
+INSERT INTO GuestStatuses (NameGuestStatus)
+	VALUES
+		('Happy'),
+		('Hungry'),
+		('Tired'),
+		('Raging'),
+		('Placid');
+
+INSERT INTO Levels (DateLevel)
+	VALUES
+		('02/01/2020'),
+		('02/02/2020'),
+		('02/03/2020'),
+		('02/04/2020'),
+		('02/05/2020');
+
+INSERT INTO Classes (NameClass)
+	VALUES
+		('Knight'),
+		('Mage'),
+		('Archer'),
+		('Squire'),
+		('Alchemist');
+
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
 SELECT * FROM OwnerUserName;
@@ -153,3 +209,7 @@ SELECT * FROM SuppliesRecieved;
 SELECT * FROM Services;
 SELECT * FROM ServiceStatus;
 SELECT * FROM Sales;
+SELECT * FROM Guests;
+SELECT * FROM GuestStatuses;
+SELECT * FROM Levels;
+SELECT * FROM Classes;
