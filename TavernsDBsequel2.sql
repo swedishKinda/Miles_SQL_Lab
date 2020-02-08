@@ -143,4 +143,13 @@ INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
         ('Jessica Collins', 22.22, '05/22/2013 00:00:00', 10),
         ('Milton Bradley', 22.22, '05/22/2013 00:00:00', 10);
 
+SELECT * FROM taverns;
+SELECT * FROM locationAddress;
+SELECT * FROM OwnerUserName;
+SELECT * FROM RoleOwners;
+SELECT * FROM Floors;
+SELECT * FROM Supplies;
+SELECT * FROM SuppliesRecieved;
+SELECT * FROM Services;
+SELECT * FROM ServiceStatus;
 SELECT * FROM Sales;
