@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesRecieved, Supplies, Floors, RoleOwners, OwnerUserName, locationAddress, taverns;
+DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, Floors, RoleOwners, OwnerUserName, locationAddress, taverns;
 
 
 CREATE TABLE taverns (
@@ -38,16 +38,19 @@ CREATE TABLE Supplies (
     idSupplies int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
-	Units VARCHAR(50),
-    SupplyCount int
+    SupplyCount int,
+	idTavern int
 );
 
-CREATE TABLE SuppliesRecieved (
+
+CREATE TABLE SuppliesReceived (
     idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
     Cost DECIMAL(38,2),
     AmountReceived int,
-    RecievedDate DATETIME
+    RecievedDate DATETIME,
+	idTavern int
 );
+
 
 CREATE TABLE Services (
     idServices int IDENTITY(1,1) PRIMARY KEY,
@@ -101,7 +104,14 @@ ALTER TABLE locationaddress ADD FOREIGN KEY (idFloors) REFERENCES Floors(idFloor
 
 ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
 
+ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(idGuestStatuses);
+
+ALTER TABLE Supplies ADD Units VARCHAR(50);
+ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
 
 INSERT INTO taverns (nameTavern)
     VALUES
@@ -143,23 +153,21 @@ INSERT INTO Floors (NumberofFloors)
         (4),
         (5);
 
-INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount)
+INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount, Units)
     VALUES 
-        ('11/16/2012 00:00:00', 'Peanuts', 22),
-        ('11/16/2012 00:00:00', 'Pistachios', 45),
-        ('11/16/2012 00:00:00', 'Chips', 50),
-        ('11/16/2012 00:00:00', 'Fish', 40),
-        ('11/16/2012 00:00:00', 'Meatballs', 60);
+        ('11/16/2012 00:00:00', 'Peanuts', 22, 'Oz'),
+        ('11/16/2012 00:00:00', 'Pistachios', 45, 'Oz'),
+        ('11/16/2012 00:00:00', 'Chips', 50, 'Oz'),
+        ('11/16/2012 00:00:00', 'Fish', 40, 'Oz'),
+        ('11/16/2012 00:00:00', 'Meatballs', 60, 'Oz');
 
-INSERT INTO SuppliesRecieved (Cost, AmountReceived, RecievedDate)
+INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate, UnitsReceived)
     VALUES
-        -- (22.22, 22, CONVERT(DATETIME, "12/19/2012 00:00:00")),
-                
-        (22.22, 22, '12/19/2012 00:00:00'),
-        (44.44, 44, '12/19/2012 00:00:00'),
-        (55.55, 55, '12/19/2012 00:00:00'),
-        (66.66, 66, '12/19/2012 00:00:00'),
-        (77.77, 77, '12/19/2012 00:00:00');
+        (22.22, 22, '12/19/2012 00:00:00', 'Oz'),
+        (44.44, 44, '12/19/2012 00:00:00', 'Oz'),
+        (55.55, 55, '12/19/2012 00:00:00', 'Oz'),
+        (66.66, 66, '12/19/2012 00:00:00', 'Oz'),
+        (77.77, 77, '12/19/2012 00:00:00', 'Oz');
 
 INSERT INTO Services (ServiceName)
     VALUES
