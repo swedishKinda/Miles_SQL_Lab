@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, taverns, locationAddress, OwnerUserName, RoleOwners, Floors, Supplies, SuppliesRecieved, Services, ServiceStatus;
+DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesRecieved, Supplies, Floors, RoleOwners, OwnerUserName, locationAddress, taverns;
 
 
 CREATE TABLE taverns (
@@ -11,7 +11,8 @@ CREATE TABLE taverns (
 
 CREATE TABLE locationAddress (
     idLocation int IDENTITY(1,1) PRIMARY KEY,
-    locAddress VARCHAR(100)
+    locAddress VARCHAR(100),
+	idFloors int
 );
 
 
@@ -37,6 +38,7 @@ CREATE TABLE Supplies (
     idSupplies int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
     NameSupply VARCHAR(100),
+	Units VARCHAR(50),
     SupplyCount int
 );
 
@@ -73,7 +75,9 @@ CREATE TABLE Guests (
     Notes VARCHAR(Max),
     Birthday DATE,
     CakeDay DATE,
+	idGuestStatuses tinyint
 );
+
 
 CREATE TABLE GuestStatuses (
     idGuestStatuses tinyint IDENTITY(1,1) PRIMARY KEY,
@@ -89,6 +93,15 @@ CREATE TABLE Classes (
     idClasses tinyint IDENTITY(1,1) PRIMARY KEY,
     NameClass VARCHAR (50)
 );
+
+ALTER TABLE taverns ADD FOREIGN KEY (idLocation) References locationAddress(idLocation);
+ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
+
+ALTER TABLE locationaddress ADD FOREIGN KEY (idFloors) REFERENCES Floors(idFloors);
+
+ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
+
+ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(idGuestStatuses);
 
 INSERT INTO taverns (nameTavern)
     VALUES
@@ -204,10 +217,6 @@ INSERT INTO Classes (NameClass)
 		('Squire'),
 		('Alchemist');
 
-ALTER TABLE taverns ADD FOREIGN KEY (idLocation) References locationAddress(idLocation);
-ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
-
-ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
