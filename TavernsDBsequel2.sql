@@ -3,23 +3,29 @@ DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, taverns, loc
 
 CREATE TABLE taverns (
     idTavern int IDENTITY(1,1) PRIMARY KEY,
-    nameTavern VARCHAR(100)
+    nameTavern VARCHAR(100),
+	idLocation int,
+	idOwner int
 );
+
 
 CREATE TABLE locationAddress (
     idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100)
 );
 
+
 CREATE TABLE OwnerUserName (
     idOwner int IDENTITY(1,1) PRIMARY KEY,
-    userName VARCHAR(100)
+    userName VARCHAR(100),
+	idRole int
 );
+
 
 CREATE TABLE RoleOwners (
     idRole int IDENTITY(1,1) PRIMARY KEY,
     RoleName VARCHAR(100),
-    RoleDescription VARCHAR(500)
+    RoleDescription VARCHAR(Max)
 );
 
 CREATE TABLE Floors (
@@ -83,7 +89,6 @@ CREATE TABLE Classes (
     idClasses tinyint IDENTITY(1,1) PRIMARY KEY,
     NameClass VARCHAR (50)
 );
-
 
 INSERT INTO taverns (nameTavern)
     VALUES
@@ -198,6 +203,11 @@ INSERT INTO Classes (NameClass)
 		('Archer'),
 		('Squire'),
 		('Alchemist');
+
+ALTER TABLE taverns ADD FOREIGN KEY (idLocation) References locationAddress(idLocation);
+ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
+
+ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
