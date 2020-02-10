@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
+DROP TABLE IF EXISTS SalesSupplyLinking, LevelsLinking, Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
 
 
 CREATE TABLE taverns (
@@ -12,6 +12,8 @@ CREATE TABLE taverns (
 CREATE TABLE locationAddress (
     idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
+	City VARCHAR(100),
+	Country VARCHAR(100)
 );
 
 CREATE TABLE OwnerUserName (
@@ -87,7 +89,18 @@ CREATE TABLE Classes (
     NameClass VARCHAR (50)
 );
 
-ALTER TABLE taverns ADD FOREIGN KEY (idLocation) References locationAddress(idLocation);
+CREATE TABLE LevelsLinking (
+	idClasses tinyint,
+	idLevels tinyint
+);
+
+CREATE TABLE SalesSupplyLinking (
+	idSales int,
+	idSupplies int
+);
+
+
+ALTER TABLE taverns ADD FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation);
 ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
 
 ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
@@ -105,6 +118,12 @@ ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id
 ALTER TABLE Supplies ADD Units VARCHAR(50);
 ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
 
+ALTER TABLE LevelsLinking ADD FOREIGN KEY (idClasses) REFERENCES Classes(idClasses);
+ALTER TABLE LevelsLinking ADD FOREIGN KEY (idLevels) REFERENCES Levels(idLevels);
+
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(idSales);
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(idSupplies);
+
 INSERT INTO taverns (nameTavern, Floors)
     VALUES
         ('Bobs Tavern', 1),
@@ -113,13 +132,13 @@ INSERT INTO taverns (nameTavern, Floors)
         ('Phils Tavern', 4),
         ('Carolyns Tavern', 5);
 
-INSERT INTO locationAddress (locAddress)
+INSERT INTO locationAddress (locAddress, City, Country)
     VALUES
-        ('100 Main'),
-        ('200 Main'),
-        ('300 Main'),
-        ('400 Main'),
-        ('500 Main');
+        ('100 Main', 'Baltimore', 'USA'),
+        ('200 Main', 'Philadelphia', 'USA'),
+        ('300 Main', 'Munich', 'Germany'),
+        ('400 Main', 'London', 'England'),
+        ('500 Main', 'St. Petersburg', 'Russia');
 
 INSERT INTO OwnerUserName (userName)
     VALUES
