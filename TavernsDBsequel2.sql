@@ -1,20 +1,18 @@
-DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, Floors, RoleOwners, OwnerUserName, locationAddress, taverns;
+DROP TABLE IF EXISTS Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
 
 
 CREATE TABLE taverns (
     idTavern int IDENTITY(1,1) PRIMARY KEY,
     nameTavern VARCHAR(100),
+	Floors int,
 	idLocation int,
 	idOwner int
 );
 
-
 CREATE TABLE locationAddress (
     idLocation int IDENTITY(1,1) PRIMARY KEY,
     locAddress VARCHAR(100),
-	idFloors int
 );
-
 
 CREATE TABLE OwnerUserName (
     idOwner int IDENTITY(1,1) PRIMARY KEY,
@@ -22,16 +20,10 @@ CREATE TABLE OwnerUserName (
 	idRole int
 );
 
-
 CREATE TABLE RoleOwners (
     idRole int IDENTITY(1,1) PRIMARY KEY,
     RoleName VARCHAR(100),
     RoleDescription VARCHAR(Max)
-);
-
-CREATE TABLE Floors (
-    idFloors int IDENTITY(1,1) PRIMARY KEY,
-    NumberofFloors int
 );
 
 CREATE TABLE Supplies (
@@ -42,19 +34,18 @@ CREATE TABLE Supplies (
 	idTavern int
 );
 
-
 CREATE TABLE SuppliesReceived (
     idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
     Cost DECIMAL(38,2),
     AmountReceived int,
     RecievedDate DATETIME,
-	idTavern int
+	idTavern int,
+	idSupplies int
 );
-
-
 CREATE TABLE Services (
     idServices int IDENTITY(1,1) PRIMARY KEY,
-    ServiceName VARCHAR(100)
+    ServiceName VARCHAR(100),
+	idServicesStatus int
 );
 
 CREATE TABLE ServiceStatus (
@@ -81,7 +72,6 @@ CREATE TABLE Guests (
 	idGuestStatuses tinyint
 );
 
-
 CREATE TABLE GuestStatuses (
     idGuestStatuses tinyint IDENTITY(1,1) PRIMARY KEY,
     NameGuestStatus VARCHAR(50)
@@ -100,26 +90,28 @@ CREATE TABLE Classes (
 ALTER TABLE taverns ADD FOREIGN KEY (idLocation) References locationAddress(idLocation);
 ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
 
-ALTER TABLE locationaddress ADD FOREIGN KEY (idFloors) REFERENCES Floors(idFloors);
-
 ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
 
 ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
 
 ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(idSupplies);
+
+ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(idServicesStatus);
+
 
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(idGuestStatuses);
 
 ALTER TABLE Supplies ADD Units VARCHAR(50);
 ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
 
-INSERT INTO taverns (nameTavern)
+INSERT INTO taverns (nameTavern, Floors)
     VALUES
-        ('Bobs Tavern'),
-		('Bills Tavern'),
-        ('Stephanies Tavern'),
-        ('Phils Tavern'),
-        ('Carolyns Tavern');
+        ('Bobs Tavern', 1),
+		('Bills Tavern', 2),
+        ('Stephanies Tavern', 3),
+        ('Phils Tavern', 4),
+        ('Carolyns Tavern', 5);
 
 INSERT INTO locationAddress (locAddress)
     VALUES
@@ -144,14 +136,6 @@ INSERT INTO RoleOwners (RoleName, RoleDescription)
         ('President', 'man'),
         ('Vice President', 'is'),
         ('Janitor', 'cool');
-
-INSERT INTO Floors (NumberofFloors)
-    VALUES
-        (1),
-        (2),
-        (3),
-        (4),
-        (5);
 
 INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount, Units)
     VALUES 
