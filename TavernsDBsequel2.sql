@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS SalesSupplyLinking, LevelsLinking, Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
+DROP TABLE IF EXISTS Stays, Rooms, SalesSupplyLinking, LevelsLinking, Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
 
 
 CREATE TABLE taverns (
@@ -86,7 +86,8 @@ CREATE TABLE Levels (
 
 CREATE TABLE Classes (
     idClasses tinyint IDENTITY(1,1) PRIMARY KEY,
-    NameClass VARCHAR (50)
+    NameClass VARCHAR (50),
+	DescriptionClass VARCHAR (500)
 );
 
 CREATE TABLE LevelsLinking (
@@ -97,6 +98,21 @@ CREATE TABLE LevelsLinking (
 CREATE TABLE SalesSupplyLinking (
 	idSales int,
 	idSupplies int
+);
+
+CREATE TABLE Rooms (
+	idRoom int IDENTITY(1,1) PRIMARY KEY,
+	Number int,
+	StatusRoom VARCHAR(100),
+	idTavern int,
+);
+
+CREATE TABLE Stays (
+	idSale int,
+	idGuest int,
+	idRoom int,
+	DateStayed DATE,
+	Rate DECIMAL(5,2)
 );
 
 
@@ -112,7 +128,6 @@ ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id
 
 ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(idServicesStatus);
 
-
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(idGuestStatuses);
 
 ALTER TABLE Supplies ADD Units VARCHAR(50);
@@ -123,6 +138,12 @@ ALTER TABLE LevelsLinking ADD FOREIGN KEY (idLevels) REFERENCES Levels(idLevels)
 
 ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(idSales);
 ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(idSupplies);
+
+ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+
+ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(idSales);
+ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(idGuest);
+ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(idRoom);
 
 INSERT INTO taverns (nameTavern, Floors)
     VALUES
@@ -220,14 +241,29 @@ INSERT INTO Levels (DateLevel)
 		('02/04/2020'),
 		('02/05/2020');
 
-INSERT INTO Classes (NameClass)
+INSERT INTO Classes (NameClass, DescriptionClass)
 	VALUES
-		('Knight'),
-		('Mage'),
-		('Archer'),
-		('Squire'),
-		('Alchemist');
+		('Knight', 'Slays monsters'),
+		('Mage', 'Uses Magic'),
+		('Archer', 'Shoots Shit'),
+		('Squire', 'Apprentice to Knight'),
+		('Alchemist', 'Makes potions');
 
+INSERT INTO Rooms (Number, StatusRoom)
+	VALUES
+		(145, 'Clean'),
+		(250, 'Dirty'),
+        (400, 'Destroyed'),
+        (450, 'Smells'),
+        (245, 'There is shit everywhere!');
+
+INSERT INTO Stays (DateStayed, Rate)
+	VALUES
+		('12/24/2019', 100),
+		('12/20/2019', 150),
+		('11/26/2019', 125),
+		('11/27/2019', 175),
+		('11/15/2019', 200);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
@@ -243,3 +279,5 @@ SELECT * FROM Guests;
 SELECT * FROM GuestStatuses;
 SELECT * FROM Levels;
 SELECT * FROM Classes;
+SELECT * FROM Rooms;
+SELECT * FROM Stays;
