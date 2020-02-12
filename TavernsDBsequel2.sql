@@ -104,10 +104,13 @@ CREATE TABLE Rooms (
 	idRoom int IDENTITY(1,1) PRIMARY KEY,
 	Number int,
 	StatusRoom VARCHAR(100),
+	Cost DECIMAL(5,2),
 	idTavern int,
+	idStays int
 );
 
 CREATE TABLE Stays (
+	idStays int IDENTITY(1,1) PRIMARY KEY,
 	idSale int,
 	idGuest int,
 	idRoom int,
@@ -211,19 +214,29 @@ INSERT INTO ServiceStatus (StatusofService)
 
 INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
     VALUES
-        ('Dilan Bob', 22.22, '05/22/2013 00:00:00', 10),
-        ('Stuart Bib', 22.22, '05/22/2013 00:00:00', 10),
-        ('Macho Man', 22.22, '05/22/2013 00:00:00', 10),
-        ('Jessica Collins', 22.22, '05/22/2013 00:00:00', 10),
-        ('Milton Bradley', 22.22, '05/22/2013 00:00:00', 10);
+        ('Dilan Bob', 22.29, '05/22/2013 00:00:00', 10),
+        ('Stuart Bib', 22.28, '05/22/2013 00:00:00', 10),
+        ('Macho Man', 22.70, '05/22/2013 00:00:00', 10),
+        ('Jessica Collins', 22.26, '05/22/2013 00:00:00', 10),
+        ('Milton Bradley', 22.25, '05/22/2013 00:00:00', 10),
+		('Dilan Bob', 22.24, '05/22/2013 00:00:00', 10),
+        ('Stuart Bib', 22.23, '05/22/2013 00:00:00', 10),
+        ('Macho Man', 22.50, '05/22/2013 00:00:00', 10),
+        ('Jessica Collins', 22.21, '05/22/2013 00:00:00', 10),
+        ('Milton Bradley', 22.20, '05/22/2013 00:00:00', 10),
+		('Dilan Bob', 22.19, '05/22/2013 00:00:00', 10),
+        ('Stuart Bib', 22.18, '05/22/2013 00:00:00', 10),
+        ('Macho Man', 22.17, '05/22/2013 00:00:00', 10),
+        ('Jessica Collins', 22.16, '05/22/2013 00:00:00', 10),
+        ('Milton Bradley', 42.15, '05/22/2013 00:00:00', 10);
 
 INSERT INTO Guests (NameGuest, Notes, Birthday, CakeDay)
 	Values
 		('William Tate', 'Hes Cool', '03/10/1967', '05/08/2000'),
-		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2000'),
-		('Dario Weaver', 'More stuff', '06/15/1966', '06/08/2000'),
+		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2003'),
+		('Ahyan Hopkins', 'More stuff', '06/15/1966', '06/08/2000'),
 		('Ahyan Hopkins', 'More more stuff', '05/10/1962', '05/12/2000'),
-		('Myrtle Klein', 'More more more stuff', '03/16/1972', '05/22/2000');
+		('Myrtle Klein', 'More more more stuff', '03/16/2004', '05/22/2000');
 
 INSERT INTO GuestStatuses (NameGuestStatus)
 	VALUES
@@ -249,13 +262,13 @@ INSERT INTO Classes (NameClass, DescriptionClass)
 		('Squire', 'Apprentice to Knight'),
 		('Alchemist', 'Makes potions');
 
-INSERT INTO Rooms (Number, StatusRoom)
+INSERT INTO Rooms (Number, StatusRoom, Cost)
 	VALUES
-		(145, 'Clean'),
-		(250, 'Dirty'),
-        (400, 'Destroyed'),
-        (450, 'Smells'),
-        (245, 'There is shit everywhere!');
+		(145, 'Clean', 50),
+		(250, 'Dirty', 75),
+        (400, 'Destroyed', 100),
+        (450, 'Smells', 125),
+        (245, 'There is shit everywhere!', 25);
 
 INSERT INTO Stays (DateStayed, Rate)
 	VALUES
@@ -281,3 +294,19 @@ SELECT * FROM Levels;
 SELECT * FROM Classes;
 SELECT * FROM Rooms;
 SELECT * FROM Stays;
+
+/*SELECT * From Rooms
+EXCEPT
+SELECT * From Rooms
+WHERE CostRoom < 100;*/
+
+/*SELECT * From Guests
+EXCEPT
+SELECT * From Guests
+WHERE Birthday > '01/01/2000';*/
+
+--SELECT DISTINCT NameGuest From Guests;
+
+--SELECT * FROM Guests order by NameGuest asc;
+
+--SELECT TOP 10 * FROM Sales ORDER BY Price desc;
