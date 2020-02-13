@@ -80,10 +80,10 @@ CREATE TABLE GuestStatuses (
     Name VARCHAR(50)
 );
 
-CREATE TABLE Levels (
+/*CREATE TABLE Levels (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
     DateLevel DATE
-);
+);*/
 
 CREATE TABLE Classes (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
@@ -92,8 +92,9 @@ CREATE TABLE Classes (
 );
 
 CREATE TABLE LevelsLinking (
+	idGuest tinyint,
 	idClasses tinyint,
-	idLevels tinyint
+	Levels smallint
 );
 
 CREATE TABLE SalesSupplyLinking (
@@ -311,3 +312,13 @@ WHERE Birthday > '01/01/2000';*/
 --SELECT * FROM Guests order by NameGuest asc;
 
 --SELECT TOP 10 * FROM Sales ORDER BY Price desc;
+
+/*SELECT TABLE_NAME , COLUMN_NAME AS NamesAndids FROM INFORMATION_SCHEMA.COLUMNS 
+	WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');*/
+--I'm not sure if this is what you're asking for but this is the best I could do and I'll ask in class
+
+/*SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
+	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
+UNION ALL
+SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
+	(SELECT Country FROM locationAddress WHERE id = 1), ')');*/
