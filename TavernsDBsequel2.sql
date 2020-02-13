@@ -297,28 +297,35 @@ SELECT * FROM Classes;
 SELECT * FROM Rooms;
 SELECT * FROM Stays;
 
-/*SELECT * From Rooms
+--2:
+SELECT * From Rooms
 EXCEPT
 SELECT * From Rooms
-WHERE CostRoom < 100;*/
+WHERE CostRoom < 100;
 
-/*SELECT * From Guests
+--3:
+SELECT * From Guests
 EXCEPT
 SELECT * From Guests
-WHERE Birthday > '01/01/2000';*/
+WHERE Birthday > '01/01/2000';
 
---SELECT DISTINCT NameGuest From Guests;
+--4:
+SELECT DISTINCT NameGuest From Guests;
 
---SELECT * FROM Guests order by NameGuest asc;
+--5:
+SELECT * FROM Guests order by NameGuest asc;
 
---SELECT TOP 10 * FROM Sales ORDER BY Price desc;
+--6:
+SELECT TOP 10 * FROM Sales ORDER BY Price desc;
 
-/*SELECT TABLE_NAME , COLUMN_NAME AS NamesAndids FROM INFORMATION_SCHEMA.COLUMNS 
-	WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');*/
+--7
+SELECT TABLE_NAME , COLUMN_NAME AS NamesAndids FROM INFORMATION_SCHEMA.COLUMNS 
+	WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
 --I'm not sure if this is what you're asking for but this is the best I could do and I'll ask in class
 
-/*SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
+--9
+SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
 UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
-	(SELECT Country FROM locationAddress WHERE id = 1), ')');*/
+	(SELECT Country FROM locationAddress WHERE id = 1), ')');
