@@ -120,36 +120,36 @@ CREATE TABLE Stays (
 );
 
 
-ALTER TABLE taverns ADD FOREIGN KEY (idLocation) REFERENCES locationAddress(idLocation);
-ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(idOwner);
+ALTER TABLE taverns ADD FOREIGN KEY (idLocation) REFERENCES locationAddress(id);
+ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(id);
 
-ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(idRole);
+ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(id);
 
-ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
 
-ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
-ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(idSupplies);
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
 
-ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(idServicesStatus);
+ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(id);
 
-ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(idGuestStatuses);
+ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
 
 ALTER TABLE Supplies ADD Units VARCHAR(50);
 ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
 
-ALTER TABLE LevelsLinking ADD FOREIGN KEY (idClasses) REFERENCES Classes(idClasses);
-ALTER TABLE LevelsLinking ADD FOREIGN KEY (idLevels) REFERENCES Levels(idLevels);
+ALTER TABLE LevelsLinking ADD FOREIGN KEY (idClasses) REFERENCES Classes(id);
+ALTER TABLE LevelsLinking ADD FOREIGN KEY (idLevels) REFERENCES Levels(id);
 
-ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(idSales);
-ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(idSupplies);
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(id);
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
 
-ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(idTavern);
+ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
 
-ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(idSales);
-ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(idGuest);
-ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(idRoom);
+ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(id);
+ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
+ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(id);
 
-INSERT INTO taverns (name, Floors)
+INSERT INTO taverns (Name, Floors)
     VALUES
         ('Bobs Tavern', 1),
 		('Bills Tavern', 2),
