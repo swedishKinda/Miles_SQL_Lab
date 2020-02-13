@@ -2,72 +2,73 @@ DROP TABLE IF EXISTS Stays, Rooms, SalesSupplyLinking, LevelsLinking, Classes, L
 
 
 CREATE TABLE taverns (
-    idTavern int IDENTITY(1,1) PRIMARY KEY,
-    nameTavern VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(100),
 	Floors int,
 	idLocation int,
 	idOwner int
 );
 
 CREATE TABLE locationAddress (
-    idLocation int IDENTITY(1,1) PRIMARY KEY,
-    locAddress VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(100),
 	City VARCHAR(100),
 	Country VARCHAR(100)
 );
 
 CREATE TABLE OwnerUserName (
-    idOwner int IDENTITY(1,1) PRIMARY KEY,
-    userName VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(100),
 	idRole int
 );
 
 CREATE TABLE RoleOwners (
-    idRole int IDENTITY(1,1) PRIMARY KEY,
-    RoleName VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(100),
     RoleDescription VARCHAR(Max)
 );
 
 CREATE TABLE Supplies (
-    idSupplies int IDENTITY(1,1) PRIMARY KEY,
+    id int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
-    NameSupply VARCHAR(100),
+    Name VARCHAR(100),
     SupplyCount int,
 	idTavern int
 );
 
 CREATE TABLE SuppliesReceived (
-    idSuppliesRecieved int IDENTITY(1,1) PRIMARY KEY,
+    id int IDENTITY(1,1) PRIMARY KEY,
     Cost DECIMAL(38,2),
     AmountReceived int,
     RecievedDate DATETIME,
 	idTavern int,
 	idSupplies int
 );
+
 CREATE TABLE Services (
-    idServices int IDENTITY(1,1) PRIMARY KEY,
-    ServiceName VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(100),
 	idServicesStatus int
 );
 
 CREATE TABLE ServiceStatus (
-    idServicesStatus int IDENTITY(1,1) PRIMARY KEY,
+    id int IDENTITY(1,1) PRIMARY KEY,
     StatusofService BIT
 );
 
 CREATE TABLE Sales (
-    idSales int IDENTITY(1,1) PRIMARY KEY,
-    idServices int FOREIGN KEY REFERENCES Supplies(idSupplies),
-    GuestName VARCHAR(100),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    idServices int FOREIGN KEY REFERENCES Supplies(id),
+    Name VARCHAR(100),
     Price DECIMAL(5,2),
     DatePurchased DATETIME,
     AmountPurchased int,
-    idTavern int FOREIGN KEY REFERENCES taverns(idTavern)
+    idTavern int FOREIGN KEY REFERENCES taverns(id)
 );
 
 CREATE TABLE Guests (
-    idGuests int IDENTITY(1,1) PRIMARY KEY,
-    NameGuest VARCHAR(250),
+    id int IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(250),
     Notes VARCHAR(Max),
     Birthday DATE,
     CakeDay DATE,
@@ -75,18 +76,18 @@ CREATE TABLE Guests (
 );
 
 CREATE TABLE GuestStatuses (
-    idGuestStatuses tinyint IDENTITY(1,1) PRIMARY KEY,
-    NameGuestStatus VARCHAR(50)
+    id tinyint IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(50)
 );
 
 CREATE TABLE Levels (
-    idLevels tinyint IDENTITY(1,1) PRIMARY KEY,
+    id tinyint IDENTITY(1,1) PRIMARY KEY,
     DateLevel DATE
 );
 
 CREATE TABLE Classes (
-    idClasses tinyint IDENTITY(1,1) PRIMARY KEY,
-    NameClass VARCHAR (50),
+    id tinyint IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR (50),
 	DescriptionClass VARCHAR (500)
 );
 
@@ -101,7 +102,7 @@ CREATE TABLE SalesSupplyLinking (
 );
 
 CREATE TABLE Rooms (
-	idRoom int IDENTITY(1,1) PRIMARY KEY,
+	id int IDENTITY(1,1) PRIMARY KEY,
 	Number int,
 	StatusRoom VARCHAR(100),
 	Cost DECIMAL(5,2),
@@ -110,7 +111,7 @@ CREATE TABLE Rooms (
 );
 
 CREATE TABLE Stays (
-	idStays int IDENTITY(1,1) PRIMARY KEY,
+	id int IDENTITY(1,1) PRIMARY KEY,
 	idSale int,
 	idGuest int,
 	idRoom int,
@@ -148,7 +149,7 @@ ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(idSales);
 ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(idGuest);
 ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(idRoom);
 
-INSERT INTO taverns (nameTavern, Floors)
+INSERT INTO taverns (name, Floors)
     VALUES
         ('Bobs Tavern', 1),
 		('Bills Tavern', 2),
@@ -156,7 +157,7 @@ INSERT INTO taverns (nameTavern, Floors)
         ('Phils Tavern', 4),
         ('Carolyns Tavern', 5);
 
-INSERT INTO locationAddress (locAddress, City, Country)
+INSERT INTO locationAddress (Name, City, Country)
     VALUES
         ('100 Main', 'Baltimore', 'USA'),
         ('200 Main', 'Philadelphia', 'USA'),
@@ -164,7 +165,7 @@ INSERT INTO locationAddress (locAddress, City, Country)
         ('400 Main', 'London', 'England'),
         ('500 Main', 'St. Petersburg', 'Russia');
 
-INSERT INTO OwnerUserName (userName)
+INSERT INTO OwnerUserName (Name)
     VALUES
         ('Bob'),
         ('Bill'),
@@ -172,7 +173,7 @@ INSERT INTO OwnerUserName (userName)
         ('Phil'),
         ('Carl');
 
-INSERT INTO RoleOwners (RoleName, RoleDescription)
+INSERT INTO RoleOwners (Name, RoleDescription)
     VALUES
         ('COO', 'ginger'),
         ('CFO', 'bread'),
@@ -180,7 +181,7 @@ INSERT INTO RoleOwners (RoleName, RoleDescription)
         ('Vice President', 'is'),
         ('Janitor', 'cool');
 
-INSERT INTO Supplies (SupplyDate, NameSupply, SupplyCount, Units)
+INSERT INTO Supplies (SupplyDate, Name, SupplyCount, Units)
     VALUES 
         ('11/16/2012 00:00:00', 'Peanuts', 22, 'Oz'),
         ('11/16/2012 00:00:00', 'Pistachios', 45, 'Oz'),
@@ -196,7 +197,7 @@ INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate, UnitsReceived)
         (66.66, 66, '12/19/2012 00:00:00', 'Oz'),
         (77.77, 77, '12/19/2012 00:00:00', 'Oz');
 
-INSERT INTO Services (ServiceName)
+INSERT INTO Services (Name)
     VALUES
         ('Pool'),
         ('Darts'),
@@ -212,7 +213,7 @@ INSERT INTO ServiceStatus (StatusofService)
         (0),
         (0);
 
-INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
+INSERT INTO Sales (Name, Price, DatePurchased, AmountPurchased)
     VALUES
         ('Dilan Bob', 22.29, '05/22/2013 00:00:00', 10),
         ('Stuart Bib', 22.28, '05/22/2013 00:00:00', 10),
@@ -230,7 +231,7 @@ INSERT INTO Sales (GuestName, Price, DatePurchased, AmountPurchased)
         ('Jessica Collins', 22.16, '05/22/2013 00:00:00', 10),
         ('Milton Bradley', 42.15, '05/22/2013 00:00:00', 10);
 
-INSERT INTO Guests (NameGuest, Notes, Birthday, CakeDay)
+INSERT INTO Guests (Name, Notes, Birthday, CakeDay)
 	Values
 		('William Tate', 'Hes Cool', '03/10/1967', '05/08/2000'),
 		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2003'),
@@ -238,7 +239,7 @@ INSERT INTO Guests (NameGuest, Notes, Birthday, CakeDay)
 		('Ahyan Hopkins', 'More more stuff', '05/10/1962', '05/12/2000'),
 		('Myrtle Klein', 'More more more stuff', '03/16/2004', '05/22/2000');
 
-INSERT INTO GuestStatuses (NameGuestStatus)
+INSERT INTO GuestStatuses (Name)
 	VALUES
 		('Happy'),
 		('Hungry'),
@@ -254,7 +255,7 @@ INSERT INTO Levels (DateLevel)
 		('02/04/2020'),
 		('02/05/2020');
 
-INSERT INTO Classes (NameClass, DescriptionClass)
+INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
 		('Knight', 'Slays monsters'),
 		('Mage', 'Uses Magic'),
