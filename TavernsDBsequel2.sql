@@ -1,4 +1,20 @@
-DROP TABLE IF EXISTS Stays, Rooms, SalesSupplyLinking, LevelsLinking, Classes, Levels, GuestStatuses, Guests, Sales, ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;
+DROP TABLE IF EXISTS Stays;
+DROP TABLE IF EXISTS Rooms;
+DROP TABLE IF EXISTS SalesSupplyLinking;
+DROP TABLE IF EXISTS GuestClass;
+DROP TABLE IF EXISTS Classes;
+DROP TABLE IF EXISTS GuestStatuses;
+DROP TABLE IF EXISTS Levels;
+DROP TABLE IF EXISTS Guests;
+DROP TABLE IF EXISTS Sales;
+DROP TABLE IF EXISTS ServiceStatus;
+DROP TABLE IF EXISTS Services;
+DROP TABLE IF EXISTS SuppliesReceived;
+DROP TABLE IF EXISTS Supplies;
+DROP TABLE IF EXISTS RoleOwners;
+DROP TABLE IF EXISTS OwnerUserName;
+DROP TABLE IF EXISTS locationAddress;
+DROP TABLE IF EXISTS taverns;
 
 
 CREATE TABLE taverns (
@@ -33,6 +49,7 @@ CREATE TABLE Supplies (
     SupplyDate DATETIME,
     Name VARCHAR(100),
     SupplyCount int,
+	Units VARCHAR(50),
 	idTavern int
 );
 
@@ -80,21 +97,17 @@ CREATE TABLE GuestStatuses (
     Name VARCHAR(50)
 );
 
-/*CREATE TABLE Levels (
+CREATE TABLE Levels (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
+	idGuest int,
+	idClass tinyint,
     DateLevel DATE
-);*/
+);
 
 CREATE TABLE Classes (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR (50),
 	DescriptionClass VARCHAR (500)
-);
-
-CREATE TABLE LevelsLinking (
-	idGuest tinyint,
-	idClasses tinyint,
-	Levels smallint
 );
 
 CREATE TABLE SalesSupplyLinking (
@@ -135,11 +148,11 @@ ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus
 
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
 
-ALTER TABLE Supplies ADD Units VARCHAR(50);
-ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
+ALTER TABLE Levels ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
+ALTER TABLE Levels ADD FOREIGN KEY (idClass) REFERENCES Classes(id);
 
-ALTER TABLE LevelsLinking ADD FOREIGN KEY (idClasses) REFERENCES Classes(id);
-ALTER TABLE LevelsLinking ADD FOREIGN KEY (idLevels) REFERENCES Levels(id);
+--ALTER TABLE Supplies ADD Units VARCHAR(50);
+--ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
 
 ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(id);
 ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
@@ -190,13 +203,13 @@ INSERT INTO Supplies (SupplyDate, Name, SupplyCount, Units)
         ('11/16/2012 00:00:00', 'Fish', 40, 'Oz'),
         ('11/16/2012 00:00:00', 'Meatballs', 60, 'Oz');
 
-INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate, UnitsReceived)
+INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate)
     VALUES
-        (22.22, 22, '12/19/2012 00:00:00', 'Oz'),
-        (44.44, 44, '12/19/2012 00:00:00', 'Oz'),
-        (55.55, 55, '12/19/2012 00:00:00', 'Oz'),
-        (66.66, 66, '12/19/2012 00:00:00', 'Oz'),
-        (77.77, 77, '12/19/2012 00:00:00', 'Oz');
+        (22.22, 22, '12/19/2012 00:00:00'),
+        (44.44, 44, '12/19/2012 00:00:00'),
+        (55.55, 55, '12/19/2012 00:00:00'),
+        (66.66, 66, '12/19/2012 00:00:00'),
+        (77.77, 77, '12/19/2012 00:00:00');
 
 INSERT INTO Services (Name)
     VALUES
@@ -301,7 +314,7 @@ SELECT * FROM Stays;
 SELECT * From Rooms
 EXCEPT
 SELECT * From Rooms
-WHERE CostRoom < 100;
+WHERE Cost < 100;
 
 --3:
 SELECT * From Guests
@@ -310,10 +323,10 @@ SELECT * From Guests
 WHERE Birthday > '01/01/2000';
 
 --4:
-SELECT DISTINCT NameGuest From Guests;
+SELECT DISTINCT Name From Guests;
 
 --5:
-SELECT * FROM Guests order by NameGuest asc;
+SELECT * FROM Guests order by Name asc;
 
 --6:
 SELECT TOP 10 * FROM Sales ORDER BY Price desc;
