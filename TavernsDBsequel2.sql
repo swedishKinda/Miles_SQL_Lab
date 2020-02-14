@@ -101,6 +101,7 @@ CREATE TABLE Levels (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
 	idGuest int,
 	idClass tinyint,
+	Level int,
     DateLevel DATE
 );
 
@@ -261,13 +262,13 @@ INSERT INTO GuestStatuses (Name)
 		('Raging'),
 		('Placid');
 
-INSERT INTO Levels (DateLevel)
+INSERT INTO Levels (Level, DateLevel)
 	VALUES
-		('02/01/2020'),
-		('02/02/2020'),
-		('02/03/2020'),
-		('02/04/2020'),
-		('02/05/2020');
+		(5, '02/01/2020'),
+		(15, '02/02/2020'),
+		(25, '02/03/2020'),
+		(35, '02/04/2020'),
+		(45, '02/05/2020');
 
 INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
@@ -334,7 +335,17 @@ SELECT TOP 10 * FROM Sales ORDER BY Price desc;
 --7
 SELECT TABLE_NAME , COLUMN_NAME AS NamesAndids FROM INFORMATION_SCHEMA.COLUMNS 
 	WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
---I'm not sure if this is what you're asking for but this is the best I could do and I'll ask in class
+--I'm not sure if this is what you're asking for.
+
+--8
+SELECT idGuest, idClass, Level,
+	CASE WHEN Level BETWEEN 1 and 10 THEN 'Noob'
+		 WHEN Level BETWEEN 11 and 20 THEN 'Intermediate'
+		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
+		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
+		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+		 Else 'No Level :(' 
+END AS LevelBracket FROM Levels;
 
 --9
 SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
