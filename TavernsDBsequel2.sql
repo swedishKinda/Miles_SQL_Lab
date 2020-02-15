@@ -65,8 +65,10 @@ CREATE TABLE SuppliesReceived (
 CREATE TABLE Services (
     id int IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(100),
-	idServicesStatus int
+	idServicesStatus int,
+	idTavern int
 );
+
 
 CREATE TABLE ServiceStatus (
     id int IDENTITY(1,1) PRIMARY KEY,
@@ -146,6 +148,7 @@ ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
 ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
 
 ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(id);
+ALTER TABLE Services ADD FOREIGN KEY (idTavern) REFERENCES Taverns(id);
 
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
 
@@ -212,13 +215,13 @@ INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate)
         (66.66, 66, '12/19/2012 00:00:00'),
         (77.77, 77, '12/19/2012 00:00:00');
 
-INSERT INTO Services (Name)
+INSERT INTO Services (Name, idTavern)
     VALUES
-        ('Pool'),
-        ('Darts'),
-        ('Bowling'),
-        ('Skeet'),
-        ('VolleyBall');
+        ('Pool', 5),
+        ('Darts', 4),
+        ('Bowling', 3),
+        ('Skeet', 2),
+        ('VolleyBall', 1);
 
 INSERT INTO ServiceStatus (StatusofService)
     VALUES
@@ -350,6 +353,6 @@ END AS LevelBracket FROM Levels;
 --9
 SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
-UNION ALL
+		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
 	(SELECT Country FROM locationAddress WHERE id = 1), ')');
