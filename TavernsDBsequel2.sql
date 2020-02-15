@@ -350,8 +350,8 @@ SELECT * FROM Guests order by Name asc;
 SELECT TOP 10 * FROM Sales ORDER BY Price desc;
 
 --7
-SELECT TABLE_NAME , COLUMN_NAME AS NamesAndids FROM INFORMATION_SCHEMA.COLUMNS 
-	WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS AS NamesAndids
+		WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
 --I'm not sure if this is what you're asking for.
 
 --8
@@ -361,16 +361,20 @@ SELECT idGuest, idClass, Level,
 		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
 		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
 		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
-		 Else 'No Level :(' 
-END AS LevelBracket FROM Levels;
+END AS Brackets FROM Levels;
 
 --9
 SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
 		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
-	(SELECT Country FROM locationAddress WHERE id = 1), ')');
-
+						   (SELECT Country FROM locationAddress WHERE id = 1), ')')
+		UNION ALL
+SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 2), ', ',
+						   (SELECT Country FROM locationAddress WHERE id = 2), ')')
+		UNION ALL
+SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 3), ', ',
+						   (SELECT Country FROM locationAddress WHERE id = 3), ')');
 
 /*HW4*/
 
