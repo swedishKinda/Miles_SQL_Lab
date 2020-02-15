@@ -1,3 +1,6 @@
+/*DROP TABLE IF EXISTS Stays, Rooms, SalesSupplyLinking, GuestClass, Classes, GuestStatuses, Guests, Sales, 
+ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, locationAddress, taverns;*/
+
 DROP TABLE IF EXISTS Stays;
 DROP TABLE IF EXISTS Rooms;
 DROP TABLE IF EXISTS SalesSupplyLinking;
@@ -77,7 +80,7 @@ CREATE TABLE ServiceStatus (
 
 CREATE TABLE Sales (
     id int IDENTITY(1,1) PRIMARY KEY,
-    idServices int FOREIGN KEY REFERENCES Supplies(id),
+    idServices int FOREIGN KEY REFERENCES Services(id),
     Name VARCHAR(100),
     Price DECIMAL(5,2),
     DatePurchased DATETIME,
@@ -322,7 +325,9 @@ SELECT * FROM Classes;
 SELECT * FROM Rooms;
 SELECT * FROM Stays;
 
+
 /*HW3*/
+
 --2:
 SELECT * From Rooms
 EXCEPT
@@ -366,7 +371,26 @@ SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
 	(SELECT Country FROM locationAddress WHERE id = 1), ')');
 
+
 /*HW4*/
+
 --1
 SELECT * FROM OwnerUserName INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 	WHERE RoleOwners.RoleDescription = 'admin';
+
+--2
+SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name FROM OwnerUserName 
+	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+	INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
+		WHERE RoleOwners.RoleDescription = 'admin';
+
+--3
+SELECT Guests.Name, Classes.Name, Level FROM Levels 
+	INNER JOIN Guests ON (Guests.id = Levels.idGuest)
+	INNER JOIN Classes ON (Classes.id = Levels.idClass)
+		ORDER BY Guests.Name asc;
+						
+--4
+SELECT TOP 10 Price, Services.Name FROM Sales 
+	INNER JOIN Services ON (Sales.idServices = Services.id)
+		ORDER BY Price desc;
