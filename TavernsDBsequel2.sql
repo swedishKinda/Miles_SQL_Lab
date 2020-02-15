@@ -398,3 +398,46 @@ SELECT Guests.Name, Classes.Name, Level FROM Levels
 SELECT TOP 10 Price, Services.Name FROM Sales 
 	INNER JOIN Services ON (Sales.idServices = Services.id)
 		ORDER BY Price desc;
+
+--5
+
+
+--6
+
+
+--7
+
+
+--8
+SELECT Guests.Name, Stays.DateStayed FROM Guests
+	INNER JOIN Stays ON (Guests.id = Stays.idGuest)
+		WHERE DateStayed BETWEEN ('11/01/2019') and ('11/30/2019');
+
+--9
+SELECT CONCAT('CREATE TABLE ',TABLE_NAME, ' (') as queryPiece 
+	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
+		UNION ALL
+SELECT CONCAT(cols.COLUMN_NAME, ' ', cols.DATA_TYPE, 
+	(CASE WHEN CHARACTER_MAXIMUM_LENGTH IS NOT NULL 
+		Then CONCAT
+			('(', CAST(CHARACTER_MAXIMUM_LENGTH as varchar(100)), ')') 
+		Else '' 
+		END),	 
+			CASE WHEN refConst.CONSTRAINT_NAME IS NOT NULL
+				Then 
+			(CONCAT(' FOREIGN KEY REFERENCES ', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
+			Else '' 
+			END, 
+			',') as queryPiece 
+FROM INFORMATION_SCHEMA.COLUMNS as cols
+	LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE as keys ON 
+		(keys.TABLE_NAME = cols.TABLE_NAME and keys.COLUMN_NAME = cols.COLUMN_NAME)
+	LEFT JOIN INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS as refConst ON 
+		(refConst.CONSTRAINT_NAME = keys.CONSTRAINT_NAME)
+	LEFT JOIN 
+		(SELECT DISTINCT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME 
+		FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE) as constKeys 
+			ON (constKeys.CONSTRAINT_NAME = refConst.UNIQUE_CONSTRAINT_NAME)
+			WHERE cols.TABLE_NAME = 'Taverns'
+				UNION ALL
+			SELECT ')';
