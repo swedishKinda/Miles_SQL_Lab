@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS Stays;
 DROP TABLE IF EXISTS Rooms;
 DROP TABLE IF EXISTS SalesSupplyLinking;
 DROP TABLE IF EXISTS GuestClass;
-DROP TABLE IF EXISTS Classes;
+--DROP TABLE IF EXISTS Classes;
 DROP TABLE IF EXISTS GuestStatuses;
 DROP TABLE IF EXISTS Levels;
 DROP TABLE IF EXISTS Guests;
@@ -11,10 +11,10 @@ DROP TABLE IF EXISTS ServiceStatus;
 DROP TABLE IF EXISTS Services;
 DROP TABLE IF EXISTS SuppliesReceived;
 DROP TABLE IF EXISTS Supplies;
+DROP TABLE IF EXISTS taverns;
 DROP TABLE IF EXISTS RoleOwners;
 DROP TABLE IF EXISTS OwnerUserName;
 DROP TABLE IF EXISTS locationAddress;
-DROP TABLE IF EXISTS taverns;
 
 
 CREATE TABLE taverns (
@@ -107,11 +107,11 @@ CREATE TABLE Levels (
     DateLevel DATE
 );
 
-CREATE TABLE Classes (
+/*CREATE TABLE Classes (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR (50),
 	DescriptionClass VARCHAR (500)
-);
+);*/
 
 CREATE TABLE SalesSupplyLinking (
 	idSales int,
@@ -167,13 +167,13 @@ ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(id);
 ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
 ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(id);
 
-INSERT INTO taverns (Name, Floors)
+INSERT INTO taverns (Name, Floors, idOwner, idLocation)
     VALUES
-        ('Bobs Tavern', 1),
-		('Bills Tavern', 2),
-        ('Stephanies Tavern', 3),
-        ('Phils Tavern', 4),
-        ('Carolyns Tavern', 5);
+        ('Bobs Tavern', 1, 5, 4),
+		('Bills Tavern', 2, 4, 3),
+        ('Stephanies Tavern', 3, 3, 2),
+        ('Phils Tavern', 4, 2, 1),
+        ('Carolyns Tavern', 5, 1, 5);
 
 INSERT INTO locationAddress (Name, City, Country)
     VALUES
@@ -183,37 +183,37 @@ INSERT INTO locationAddress (Name, City, Country)
         ('400 Main', 'London', 'England'),
         ('500 Main', 'St. Petersburg', 'Russia');
 
-INSERT INTO OwnerUserName (Name)
+INSERT INTO OwnerUserName (Name, idRole)
     VALUES
-        ('Bob'),
-        ('Bill'),
-        ('Will'),
-        ('Phil'),
-        ('Carl');
+        ('Bob', 1),
+        ('Bill', 2),
+        ('Will', 3),
+        ('Phil', 4),
+        ('Carl', 5);
 
 INSERT INTO RoleOwners (Name, RoleDescription)
     VALUES
         ('COO', 'ginger'),
         ('CFO', 'bread'),
-        ('President', 'man'),
+        ('President', 'admin'),
         ('Vice President', 'is'),
         ('Janitor', 'cool');
 
-INSERT INTO Supplies (SupplyDate, Name, SupplyCount, Units)
+INSERT INTO Supplies (SupplyDate, Name, SupplyCount, Units, idTavern)
     VALUES 
-        ('11/16/2012 00:00:00', 'Peanuts', 22, 'Oz'),
-        ('11/16/2012 00:00:00', 'Pistachios', 45, 'Oz'),
-        ('11/16/2012 00:00:00', 'Chips', 50, 'Oz'),
-        ('11/16/2012 00:00:00', 'Fish', 40, 'Oz'),
-        ('11/16/2012 00:00:00', 'Meatballs', 60, 'Oz');
+        ('11/16/2012 00:00:00', 'Peanuts', 22, 'Oz', 5),
+        ('11/16/2012 00:00:00', 'Pistachios', 45, 'Oz', 4),
+        ('11/16/2012 00:00:00', 'Chips', 50, 'Oz', 3),
+        ('11/16/2012 00:00:00', 'Fish', 40, 'Oz', 2),
+        ('11/16/2012 00:00:00', 'Meatballs', 60, 'Oz', 1);
 
-INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate)
+INSERT INTO SuppliesReceived (Cost, AmountReceived, RecievedDate, idTavern, idSupplies)
     VALUES
-        (22.22, 22, '12/19/2012 00:00:00'),
-        (44.44, 44, '12/19/2012 00:00:00'),
-        (55.55, 55, '12/19/2012 00:00:00'),
-        (66.66, 66, '12/19/2012 00:00:00'),
-        (77.77, 77, '12/19/2012 00:00:00');
+        (22.22, 22, '12/19/2012 00:00:00', 5, 4),
+        (44.44, 44, '12/19/2012 00:00:00', 4, 3),
+        (55.55, 55, '12/19/2012 00:00:00', 3, 2),
+        (66.66, 66, '12/19/2012 00:00:00', 2, 1),
+        (77.77, 77, '12/19/2012 00:00:00', 1, 5);
 
 INSERT INTO Services (Name, idTavern)
     VALUES
@@ -231,31 +231,31 @@ INSERT INTO ServiceStatus (StatusofService)
         (0),
         (0);
 
-INSERT INTO Sales (Name, Price, DatePurchased, AmountPurchased)
+INSERT INTO Sales (idServices, Name, Price, DatePurchased, AmountPurchased, idTavern)
     VALUES
-        ('Dilan Bob', 22.29, '05/22/2013 00:00:00', 10),
-        ('Stuart Bib', 22.28, '05/22/2013 00:00:00', 10),
-        ('Macho Man', 22.70, '05/22/2013 00:00:00', 10),
-        ('Jessica Collins', 22.26, '05/22/2013 00:00:00', 10),
-        ('Milton Bradley', 22.25, '05/22/2013 00:00:00', 10),
-		('Dilan Bob', 22.24, '05/22/2013 00:00:00', 10),
-        ('Stuart Bib', 22.23, '05/22/2013 00:00:00', 10),
-        ('Macho Man', 22.50, '05/22/2013 00:00:00', 10),
-        ('Jessica Collins', 22.21, '05/22/2013 00:00:00', 10),
-        ('Milton Bradley', 22.20, '05/22/2013 00:00:00', 10),
-		('Dilan Bob', 22.19, '05/22/2013 00:00:00', 10),
-        ('Stuart Bib', 22.18, '05/22/2013 00:00:00', 10),
-        ('Macho Man', 22.17, '05/22/2013 00:00:00', 10),
-        ('Jessica Collins', 22.16, '05/22/2013 00:00:00', 10),
-        ('Milton Bradley', 42.15, '05/22/2013 00:00:00', 10);
+        (5, 'Dilan Bob', 22.29, '05/22/2013 00:00:00', 10, 1),
+        (4,'Stuart Bib', 22.28, '05/22/2013 00:00:00', 10, 2),
+        (3, 'Macho Man', 22.70, '05/22/2013 00:00:00', 10, 3),
+        (2, 'Jessica Collins', 22.26, '05/22/2013 00:00:00', 10, 4),
+        (1,'Milton Bradley', 22.25, '05/22/2013 00:00:00', 10, 5),
+		(1, 'Dilan Bob', 22.24, '05/22/2013 00:00:00', 10, 5),
+        (2, 'Stuart Bib', 22.23, '05/22/2013 00:00:00', 10, 4),
+        (3, 'Macho Man', 22.50, '05/22/2013 00:00:00', 10, 3),
+        (4, 'Jessica Collins', 22.21, '05/22/2013 00:00:00', 10, 2),
+        (5, 'Milton Bradley', 22.20, '05/22/2013 00:00:00', 10, 1),
+		(5, 'Dilan Bob', 22.19, '05/22/2013 00:00:00', 10, 1),
+        (4, 'Stuart Bib', 22.18, '05/22/2013 00:00:00', 10, 2),
+        (3, 'Macho Man', 22.17, '05/22/2013 00:00:00', 10, 3),
+        (2, 'Jessica Collins', 22.16, '05/22/2013 00:00:00', 10, 4),
+        (1, 'Milton Bradley', 42.15, '05/22/2013 00:00:00', 10, 5);
 
-INSERT INTO Guests (Name, Notes, Birthday, CakeDay)
+INSERT INTO Guests (Name, Notes, Birthday, CakeDay, idGuestStatuses)
 	Values
-		('William Tate', 'Hes Cool', '03/10/1967', '05/08/2000'),
-		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2003'),
-		('Ahyan Hopkins', 'More stuff', '06/15/1966', '06/08/2000'),
-		('Ahyan Hopkins', 'More more stuff', '05/10/1962', '05/12/2000'),
-		('Myrtle Klein', 'More more more stuff', '03/16/2004', '05/22/2000');
+		('William Tate', 'Hes Cool', '03/10/1967', '05/08/2000', 5),
+		('Ivo Brook', 'Stuff', '05/11/1960', '06/09/2003', 4),
+		('Ahyan Hopkins', 'More stuff', '06/15/1966', '06/08/2000', 3),
+		('Ahyan Hopkins', 'More more stuff', '05/10/1962', '05/12/2000', 2),
+		('Myrtle Klein', 'More more more stuff', '03/16/2004', '05/22/2000', 1);
 
 INSERT INTO GuestStatuses (Name)
 	VALUES
@@ -265,37 +265,45 @@ INSERT INTO GuestStatuses (Name)
 		('Raging'),
 		('Placid');
 
-INSERT INTO Levels (Level, DateLevel)
+INSERT INTO Levels (idGuest, idClass, Level, DateLevel)
 	VALUES
-		(5, '02/01/2020'),
-		(15, '02/02/2020'),
-		(25, '02/03/2020'),
-		(35, '02/04/2020'),
-		(45, '02/05/2020');
+		(5, 4, 5, '02/01/2020'),
+		(4, 3, 15, '02/02/2020'),
+		(3, 2, 25, '02/03/2020'),
+		(2, 1, 35, '02/04/2020'),
+		(1, 5, 45, '02/05/2020');
 
-INSERT INTO Classes (Name, DescriptionClass)
+/*INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
 		('Knight', 'Slays monsters'),
 		('Mage', 'Uses Magic'),
 		('Archer', 'Shoots Shit'),
 		('Squire', 'Apprentice to Knight'),
-		('Alchemist', 'Makes potions');
+		('Alchemist', 'Makes potions');*/
 
-INSERT INTO Rooms (Number, StatusRoom, Cost)
+INSERT INTO SalesSupplyLinking (idSales, idSupplies)
 	VALUES
-		(145, 'Clean', 50),
-		(250, 'Dirty', 75),
-        (400, 'Destroyed', 100),
-        (450, 'Smells', 125),
-        (245, 'There is shit everywhere!', 25);
+		(5, 4),
+		(4, 3),
+		(3, 2),
+		(2, 1),
+		(1, 5);
 
-INSERT INTO Stays (DateStayed, Rate)
+INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern, idStays)
 	VALUES
-		('12/24/2019', 100),
-		('12/20/2019', 150),
-		('11/26/2019', 125),
-		('11/27/2019', 175),
-		('11/15/2019', 200);
+		(145, 'Clean', 50, 5, 4),
+		(250, 'Dirty', 75, 4, 3),
+        (400, 'Destroyed', 100, 3, 2),
+        (450, 'Smells', 125, 2, 1),
+        (245, 'There is shit everywhere!', 25, 1, 5);
+
+INSERT INTO Stays (idSale, idGuest, idRoom, DateStayed, Rate)
+	VALUES
+		(5, 4, 3, '12/24/2019', 100),
+		(4, 3, 2, '12/20/2019', 150),
+		(3, 2, 1, '11/26/2019', 125),
+		(2, 1, 5, '11/27/2019', 175),
+		(1, 5, 4, '11/15/2019', 200);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
@@ -314,6 +322,7 @@ SELECT * FROM Classes;
 SELECT * FROM Rooms;
 SELECT * FROM Stays;
 
+/*HW3*/
 --2:
 SELECT * From Rooms
 EXCEPT
@@ -356,3 +365,8 @@ SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
 	(SELECT Country FROM locationAddress WHERE id = 1), ')');
+
+/*HW4*/
+--1
+SELECT * FROM OwnerUserName INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+	WHERE RoleOwners.RoleDescription = 'admin';
