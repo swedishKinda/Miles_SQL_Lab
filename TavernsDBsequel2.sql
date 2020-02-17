@@ -388,7 +388,7 @@ SELECT * FROM OwnerUserName INNER JOIN RoleOwners ON (OwnerUserName.idRole = Rol
 SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name FROM OwnerUserName 
 	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 	INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
-		WHERE RoleOwners.RoleDescription = 'admin';
+		WHERE RoleOwners.RoleDescription LIKE '%admin%';
 
 --3
 SELECT Guests.Name, Classes.Name, Level FROM Levels 
@@ -416,11 +416,13 @@ SELECT idGuest, idClass, Guests.Name, Classes.Name, Level FROM Levels
 			HAVING COUNT(*) > 1) ORDER BY idGuest;
 
 --7
--- I can't figure this one out yet
-SELECT idGuest, idClass, Guests.Name, Classes.Name, MAX(Level) FROM Levels
+-- I can't figure this one out yet (got a little closer though)
+SELECT Guests.Name, MAX(Level) FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		GROUP BY idGuest;
+		GROUP BY Guests.Name;
+
+SELECT * FROM Levels;
 
 --8
 SELECT Guests.Name, Stays.DateStayed FROM Guests
