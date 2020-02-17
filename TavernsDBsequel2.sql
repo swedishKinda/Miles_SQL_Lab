@@ -274,7 +274,9 @@ INSERT INTO Levels (idGuest, idClass, Level, DateLevel)
 		(4, 3, 15, '02/02/2020'),
 		(3, 2, 25, '02/03/2020'),
 		(2, 1, 35, '02/04/2020'),
-		(1, 5, 45, '02/05/2020');
+		(1, 5, 45, '02/05/2020'),
+		(5, 3, 21, '01/25/2020'),
+		(4, 2, 12, '01/20/2020');
 
 /*INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
@@ -400,13 +402,25 @@ SELECT TOP 10 Price, Services.Name FROM Sales
 		ORDER BY Price desc;
 
 --5
-
+SELECT idGuest, idClass, Guests.Name, Classes.Name, Level FROM Levels
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		WHERE idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest
+			HAVING COUNT(*) > 1) ORDER BY idGuest;
 
 --6
-
+SELECT idGuest, idClass, Guests.Name, Classes.Name, Level FROM Levels
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		WHERE Level > 5 AND idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest
+			HAVING COUNT(*) > 1) ORDER BY idGuest;
 
 --7
-
+-- I can't figure this one out yet
+SELECT idGuest, idClass, Guests.Name, Classes.Name, MAX(Level) FROM Levels
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		GROUP BY idGuest;
 
 --8
 SELECT Guests.Name, Stays.DateStayed FROM Guests
@@ -425,9 +439,14 @@ SELECT CONCAT(cols.COLUMN_NAME, ' ', cols.DATA_TYPE,
 		END),	 
 			CASE WHEN refConst.CONSTRAINT_NAME IS NOT NULL
 				Then 
-			(CONCAT(' FOREIGN KEY REFERENCES ', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
+			(CONCAT(' FOREIGN KEY REFERENCES', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
 			Else '' 
-			END, 
+			END,
+				CASE WHEN keys.CONSTRAINT_NAME LIKE '%PK%'
+				THEN
+					(' IDENTITY(1,1) PRIMARY KEY')
+				ELSE ''
+				END,
 			',') as queryPiece 
 FROM INFORMATION_SCHEMA.COLUMNS as cols
 	LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE as keys ON 
@@ -440,4 +459,4 @@ FROM INFORMATION_SCHEMA.COLUMNS as cols
 			ON (constKeys.CONSTRAINT_NAME = refConst.UNIQUE_CONSTRAINT_NAME)
 			WHERE cols.TABLE_NAME = 'Taverns'
 				UNION ALL
-			SELECT ')';
+			SELECT ');';
