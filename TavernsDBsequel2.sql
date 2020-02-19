@@ -46,7 +46,7 @@ CREATE TABLE RoleOwners (
     Name VARCHAR(100),
     RoleDescription VARCHAR(Max)
 );
-
+SELECT * FROM RoleOwners
 CREATE TABLE Supplies (
     id int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
@@ -136,6 +136,7 @@ CREATE TABLE Stays (
 	idGuest int,
 	idRoom int,
 	DateStayed DATE,
+	DateLeft DATE,
 	Rate DECIMAL(5,2)
 );
 
@@ -302,13 +303,13 @@ INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern, idStays)
         (450, 'Smells', 125, 2, 1),
         (245, 'There is shit everywhere!', 25, 1, 5);
 
-INSERT INTO Stays (idSale, idGuest, idRoom, DateStayed, Rate)
+INSERT INTO Stays (idSale, idGuest, idRoom, DateStayed, DateLeft, Rate)
 	VALUES
-		(5, 4, 3, '12/24/2019', 100),
-		(4, 3, 2, '12/20/2019', 150),
-		(3, 2, 1, '11/26/2019', 125),
-		(2, 1, 5, '11/27/2019', 175),
-		(1, 5, 4, '11/15/2019', 200);
+		(5, 4, 3, '12/24/2019', '12/26/2019', 100),
+		(4, 3, 2, '12/20/2019', '12/26/2019', 150),
+		(3, 2, 1, '11/26/2019', '12/26/2019', 125),
+		(2, 1, 5, '11/27/2019', '12/26/2019', 175),
+		(1, 5, 4, '11/15/2019', '12/26/2019', 200);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
@@ -381,14 +382,17 @@ SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 3), ', '
 /*HW4*/
 
 --1
-SELECT * FROM OwnerUserName INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
-	WHERE RoleOwners.RoleDescription = 'admin';
+SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription FROM OwnerUserName 
+	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+		WHERE RoleOwners.RoleDescription LIKE '%admin%';
 
 --2
-SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name FROM OwnerUserName 
-	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
-	INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
-		WHERE RoleOwners.RoleDescription LIKE '%admin%';
+SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name,
+	locationAddress.Name, locationAddress.City, locationAddress.Country FROM OwnerUserName 
+		INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+		INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
+		INNER JOIN locationAddress ON (Taverns.idLocation = locationAddress.id)
+			WHERE RoleOwners.RoleDescription LIKE '%admin%'
 
 --3
 SELECT Guests.Name, Classes.Name, Level FROM Levels 
@@ -402,33 +406,32 @@ SELECT TOP 10 Price, Services.Name FROM Sales
 		ORDER BY Price desc;
 
 --5
-SELECT idGuest, idClass, Guests.Name, Classes.Name, Level FROM Levels
+SELECT Guests.Name, Classes.Name, Level FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		WHERE idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest
-			HAVING COUNT(*) > 1) ORDER BY idGuest;
+		WHERE idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest HAVING COUNT(idGuest) > 1)
+			ORDER BY Guests.Name;
 
 --6
-SELECT idGuest, idClass, Guests.Name, Classes.Name, Level FROM Levels
+SELECT Guests.Name, Classes.Name, Level FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		WHERE Level > 5 AND idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest
-			HAVING COUNT(*) > 1) ORDER BY idGuest;
+		WHERE Level > 5 AND idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest HAVING COUNT(idGuest) > 1)
+			ORDER BY idGuest;
 
 --7
--- I can't figure this one out yet (got a little closer though)
-SELECT Guests.Name, MAX(Level) FROM Levels
+SELECT idGuest, MAX(Level) FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
-	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		GROUP BY Guests.Name;
-
-SELECT * FROM Levels;
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)	
+			GROUP BY idGuest;
 
 --8
-SELECT Guests.Name, Stays.DateStayed FROM Guests
+SELECT Guests.Name, Stays.DateStayed AS Checked_In FROM Guests
 	INNER JOIN Stays ON (Guests.id = Stays.idGuest)
 		WHERE DateStayed BETWEEN ('11/01/2019') and ('11/30/2019');
 
+
+		SELECT * FROM Stays
 --9
 SELECT CONCAT('CREATE TABLE ',TABLE_NAME, ' (') as queryPiece 
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
