@@ -464,3 +464,30 @@ FROM INFORMATION_SCHEMA.COLUMNS as cols
 			WHERE cols.TABLE_NAME = 'Taverns'
 				UNION ALL
 			SELECT ');';
+
+/*HW5*/
+
+--1
+SELECT OwnerUserName.Name, RoleOwners.Name, RoleOwners.RoleDescription FROM OwnerUserName
+	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+
+--2
+IF OBJECT_ID (N'dbo.TotalClassesPerGuest', N'FN') IS NOT NULL  
+    DROP FUNCTION dbo.TotalClassesPerGuest;  
+GO  
+CREATE FUNCTION dbo.TotalClassesPerGuest (@Classes int)  
+RETURNS int
+AS  
+BEGIN
+	DECLARE @TotalClassesPerGuest int
+	SELECT @TotalClassesPerGuest = COUNT(Levels.idGuest)
+    FROM Levels
+	WHERE @Classes = Levels.idGuest
+		IF (@TotalClassesPerGuest IS NULL)   
+			SET @TotalClassesPerGuest = 0;    
+    RETURN @TotalClassesPerGuest;  
+END;
+GO
+SELECT *, dbo.TotalClassesPerGuest(idGuest) AS TotalClassesPerGuest FROM Levels
+
+SELECT * FROM LEVELS
