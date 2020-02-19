@@ -420,7 +420,7 @@ SELECT Guests.Name, Classes.Name, Level FROM Levels
 			ORDER BY idGuest;
 
 --7
-SELECT idGuest, MAX(Level) FROM Levels 
+SELECT idGuest, MAX(Level) AS HighestLevel FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)	
 			GROUP BY idGuest;
