@@ -135,8 +135,8 @@ CREATE TABLE Stays (
 	idSale int,
 	idGuest int,
 	idRoom int,
-	DateStayed DATE,
-	DateLeft DATE,
+	CheckedIn DATE,
+	CheckedOut DATE,
 	Rate DECIMAL(5,2)
 );
 
@@ -303,13 +303,13 @@ INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern, idStays)
         (450, 'Smells', 125, 2, 1),
         (245, 'There is shit everywhere!', 25, 1, 5);
 
-INSERT INTO Stays (idSale, idGuest, idRoom, DateStayed, DateLeft, Rate)
+INSERT INTO Stays (idSale, idGuest, idRoom, CheckedIn, CheckedOut, Rate)
 	VALUES
 		(5, 4, 3, '12/24/2019', '12/26/2019', 100),
 		(4, 3, 2, '12/20/2019', '12/26/2019', 150),
 		(3, 2, 1, '11/26/2019', '12/26/2019', 125),
 		(2, 1, 5, '11/27/2019', '12/26/2019', 175),
-		(1, 5, 4, '11/15/2019', '12/26/2019', 200);
+		(1, 5, 4, '11/15/2019', '11/20/2019', 200);
 
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
@@ -335,7 +335,7 @@ SELECT * FROM Stays;
 SELECT * From Rooms
 EXCEPT
 SELECT * From Rooms
-WHERE Cost < 100;
+WHERE Cost <= 100;
 
 --3:
 SELECT * From Guests
@@ -406,34 +406,33 @@ SELECT TOP 10 Price, Services.Name FROM Sales
 		ORDER BY Price desc;
 
 --5
-SELECT Guests.Name, Classes.Name, Level FROM Levels
+SELECT idGuest, Guests.Name, Classes.Name, Level FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		WHERE idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest HAVING COUNT(idGuest) > 1)
 			ORDER BY Guests.Name;
 
 --6
-SELECT Guests.Name, Classes.Name, Level FROM Levels
+SELECT idGuest, Guests.Name, Classes.Name, Level FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		WHERE Level > 5 AND idGuest IN (SELECT idGuest FROM Levels GROUP BY idGuest HAVING COUNT(idGuest) > 1)
 			ORDER BY idGuest;
 
 --7
-SELECT idGuest, MAX(Level) AS HighestLevel FROM Levels 
+SELECT idGuest, Max(Level) AS HighestLevel FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)	
 			GROUP BY idGuest;
 
 --8
-SELECT Guests.Name, Stays.DateStayed AS Checked_In FROM Guests
+SELECT Guests.Name, Stays.CheckedIn, Stays.CheckedOut FROM Guests
 	INNER JOIN Stays ON (Guests.id = Stays.idGuest)
-		WHERE DateStayed BETWEEN ('11/01/2019') and ('11/30/2019');
+		WHERE CheckedIn BETWEEN ('11/01/2019') and ('11/30/2019') OR
+		      CheckedOut BETWEEN ('11/01/2019') and ('11/30/2019');
 
-
-		SELECT * FROM Stays
 --9
-SELECT CONCAT('CREATE TABLE ',TABLE_NAME, ' (') as queryPiece 
+SELECT CONCAT('CREATE TABLE ',TABLE_NAME, ' (') as CreateTableTemplate 
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
 		UNION ALL
 SELECT CONCAT(cols.COLUMN_NAME, ' ', cols.DATA_TYPE, 
@@ -444,7 +443,7 @@ SELECT CONCAT(cols.COLUMN_NAME, ' ', cols.DATA_TYPE,
 		END),	 
 			CASE WHEN refConst.CONSTRAINT_NAME IS NOT NULL
 				Then 
-			(CONCAT(' FOREIGN KEY REFERENCES', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
+			(CONCAT(' FOREIGN KEY REFERENCES ', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
 			Else '' 
 			END,
 				CASE WHEN keys.CONSTRAINT_NAME LIKE '%PK%'
