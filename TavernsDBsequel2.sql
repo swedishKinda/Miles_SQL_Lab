@@ -472,22 +472,25 @@ SELECT OwnerUserName.Name, RoleOwners.Name, RoleOwners.RoleDescription FROM Owne
 	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 
 --2
-IF OBJECT_ID (N'dbo.TotalClassesPerGuest', N'FN') IS NOT NULL  
-    DROP FUNCTION dbo.TotalClassesPerGuest;  
+IF OBJECT_ID (N'dbo.TotalGuestsPerClass', N'FN') IS NOT NULL  
+    DROP FUNCTION dbo.TotalGuestsPerClass;  
 GO  
-CREATE FUNCTION dbo.TotalClassesPerGuest (@Classes int)  
+CREATE FUNCTION dbo.TotalGuestsPerClass (@Guests int)  
 RETURNS int
 AS  
 BEGIN
-	DECLARE @TotalClassesPerGuest int
-	SELECT @TotalClassesPerGuest = COUNT(Levels.idGuest)
+	DECLARE @TotalGuestsPerClass int
+	SELECT @TotalGuestsPerClass = COUNT(Levels.idClass)
     FROM Levels
-	WHERE @Classes = Levels.idGuest
-		IF (@TotalClassesPerGuest IS NULL)   
-			SET @TotalClassesPerGuest = 0;    
-    RETURN @TotalClassesPerGuest;  
+	WHERE @Guests = Levels.idClass
+		IF (@TotalGuestsPerClass IS NULL)   
+			SET @TotalGuestsPerClass = 0;    
+    RETURN @TotalGuestsPerClass;  
 END;
 GO
-SELECT *, dbo.TotalClassesPerGuest(idGuest) AS TotalClassesPerGuest FROM Levels
+--How can I get the idClass's column to collapse on duplicates
+SELECT Levels.idGuest, Guests.Name, Levels.idClass, dbo.TotalGuestsPerClass(idClass) AS TotalGuestsPerClass FROM Levels
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+		GROUP BY Levels.idGuest, Levels.idClass, Guests.Name, dbo.TotalGuestsPerClass(idClass)
 
 SELECT * FROM LEVELS
