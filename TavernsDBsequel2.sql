@@ -489,8 +489,49 @@ BEGIN
 END;
 GO
 --How can I get the idClass's column to collapse on duplicates
-SELECT Levels.idGuest, Guests.Name, Levels.idClass, dbo.TotalGuestsPerClass(idClass) AS TotalGuestsPerClass FROM Levels
+--Also I plan to come back to this and try to base it off the Table Classes
+--And turn it into a query(oops)
+SELECT Levels.idGuest, Guests.Name, Classes.Name, Levels.idClass, dbo.TotalGuestsPerClass(idClass) AS TotalGuestsPerClass FROM Levels
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
-		GROUP BY Levels.idGuest, Levels.idClass, Guests.Name, dbo.TotalGuestsPerClass(idClass)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		GROUP BY Levels.idGuest, Levels.idClass, Guests.Name, Classes.Name, dbo.TotalGuestsPerClass(idClass)
 
 SELECT * FROM LEVELS
+
+--3
+SELECT idGuest, Guests.Name, idClass, Classes.Name, Level,
+	CASE WHEN Level BETWEEN 1 and 10 THEN 'Noob'
+		 WHEN Level BETWEEN 11 and 20 THEN 'Intermediate'
+		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
+		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
+		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+END AS Brackets FROM Levels 
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		ORDER BY Guests.Name;
+
+--4
+GO
+IF OBJECT_ID (N'dbo.GetBrackets', N'IF') IS NOT NULL  
+    DROP FUNCTION dbo.GetBrackets;  
+GO  
+CREATE FUNCTION dbo.GetBrackets (@GuestId int)  
+RETURNS TABLE  
+AS  
+RETURN   
+	SELECT Levels.idGuest, Guests.Name, Levels.idClass, Classes.Name, Levels.Level
+	FROM Levels AS L
+	INNER JOIN Guests AS GS ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes AS CS ON (Levels.idClass = Classes.id)
+	WHERE Levels.idGuest = @GuestId
+	GROUP BY Guests.Name;  
+
+GO
+	
+	CASE WHEN Level BETWEEN 1 and 10 THEN 'Noob'
+		 WHEN Level BETWEEN 11 and 20 THEN 'Intermediate'
+		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
+		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
+		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+
+--5
