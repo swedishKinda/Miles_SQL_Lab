@@ -579,3 +579,35 @@ RETURN
 );
 GO
 SELECT * FROM dbo.PriceRange(80, 130)
+
+--7
+IF OBJECT_ID (N'dbo.CreateARoom', N'P') IS NOT NULL  
+    DROP PROCEDURE dbo.CreateARoom;
+GO
+CREATE PROCEDURE dbo.CreateARoom
+	@cost DECIMAL(5,2),
+	@tavernsname varchar(50),
+	@tavernid int,
+	@newtavernid int
+AS
+SET @cost = (SELECT MIN(Cost) FROM dbo.PriceRange(80, 130));
+SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130) AS NewRoom
+	WHERE Cost = (
+        SELECT MIN(Cost)
+        FROM dbo.PriceRange(80, 130)));
+SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
+	IF (@tavernid = (Select COUNT(*) FROM Taverns))
+			BEGIN
+			SET @newtavernid = (@tavernid - (@tavernid - 1));
+			END   
+			ELSE 
+			BEGIN 
+			SET @newTavernid = (@tavernid + 1);
+			END
+/*Can't get INSERT to work. Error message says "Must declare the scalar variable '@cost'" when I'm pretty sure
+  It's declared...*/
+INSERT INTO Rooms (Cost, idTavern)
+	VALUES
+		((@cost - 0.01), @newtavernid);
+
+SELECT * FROM Rooms;
