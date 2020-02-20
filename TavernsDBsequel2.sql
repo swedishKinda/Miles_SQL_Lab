@@ -508,30 +508,74 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level,
 END AS Brackets FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		ORDER BY Guests.Name;
+		ORDER BY Guests.Name asc;
 
 --4
 GO
-IF OBJECT_ID (N'dbo.GetBrackets', N'IF') IS NOT NULL  
+IF OBJECT_ID (N'dbo.GetBrackets', N'FN') IS NOT NULL  
     DROP FUNCTION dbo.GetBrackets;  
 GO  
-CREATE FUNCTION dbo.GetBrackets (@GuestId int)  
-RETURNS TABLE  
-AS  
-RETURN   
-	SELECT Levels.idGuest, Guests.Name, Levels.idClass, Classes.Name, Levels.Level
-	FROM Levels AS L
-	INNER JOIN Guests AS GS ON (Levels.idGuest = Guests.id)
-	INNER JOIN Classes AS CS ON (Levels.idClass = Classes.id)
-	WHERE Levels.idGuest = @GuestId
-	GROUP BY Guests.Name;  
+CREATE FUNCTION dbo.GetBrackets (@level int)  
+RETURNS varchar(50)  
+AS    
+BEGIN
+DECLARE @ret int;
+	DECLARE @label varchar(50);  
+SELECT @ret = (@level)   
+    IF (@ret < 10)
+		SET @label = 'Noob';
+	IF (@ret BETWEEN 10 AND 19)
+		SET @label = 'Intermediate';
+	IF (@ret BETWEEN 20 AND 29)
+		SET @label = 'Pro';
+	IF (@ret BETWEEN 30 AND 39)
+		SET @label = 'Expert';
+	IF (@ret >= 40)
+		SET @label = 'Master';
+RETURN @label;
+END;
 
 GO
-	
-	CASE WHEN Level BETWEEN 1 and 10 THEN 'Noob'
-		 WHEN Level BETWEEN 11 and 20 THEN 'Intermediate'
-		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
-		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
-		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
 
+SELECT idGuest, Guests.Name, idClass, Classes.Name, Level, dbo.GetBrackets(Level) AS LevelBrackets FROM Levels
+	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
+	INNER JOIN Classes ON (Levels.idClass = Classes.id)
+		ORDER BY Guests.Name asc;
+	
 --5
+GO
+IF OBJECT_ID (N'dbo.RoomOpen', N'IF') IS NOT NULL
+	DROP FUNCTION dbo.RoomOpen;
+GO 
+CREATE FUNCTION dbo.RoomOpen (@vacant date)
+RETURNS TABLE 
+AS
+RETURN
+(
+	SELECT R.Number, T.Name, R.idTavern, R.id AS idRoom
+	FROM Stays AS S
+		INNER JOIN Rooms AS R ON R.id = S.idRoom
+		INNER JOIN Taverns AS T ON T.id = R.idTavern
+	WHERE @vacant NOT BETWEEN S.CheckedIn AND S.Checkedout
+);
+GO
+SELECT * FROM dbo.RoomOpen('12/19/2019')
+
+--6
+GO
+IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
+	DROP FUNCTION dbo.PriceRange;
+GO 
+CREATE FUNCTION dbo.PriceRange (@min DECIMAL(5,2), @max DECIMAL(5,2))
+RETURNS TABLE
+AS
+RETURN
+(
+	SELECT R.Number, T.Name, R.idTavern, R.id, R.Cost
+	FROM Rooms AS R
+		INNER JOIN Stays AS S ON R.id = S.idRoom
+		INNER JOIN Taverns AS T ON T.id = R.idTavern
+	WHERE R.Cost BETWEEN @min AND @max
+);
+GO
+SELECT * FROM dbo.PriceRange(80, 130)
