@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS RoleOwners;
 DROP TABLE IF EXISTS OwnerUserName;
 DROP TABLE IF EXISTS locationAddress;
 
-
 CREATE TABLE taverns (
     id int IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(100),
@@ -46,7 +45,7 @@ CREATE TABLE RoleOwners (
     Name VARCHAR(100),
     RoleDescription VARCHAR(Max)
 );
-SELECT * FROM RoleOwners
+
 CREATE TABLE Supplies (
     id int IDENTITY(1,1) PRIMARY KEY,
     SupplyDate DATETIME,
@@ -126,8 +125,7 @@ CREATE TABLE Rooms (
 	Number int,
 	StatusRoom VARCHAR(100),
 	Cost DECIMAL(5,2),
-	idTavern int,
-	idStays int
+	idTavern int
 );
 
 CREATE TABLE Stays (
@@ -295,17 +293,17 @@ INSERT INTO SalesSupplyLinking (idSales, idSupplies)
 		(2, 1),
 		(1, 5);
 
-INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern, idStays)
+INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern)
 	VALUES
-		(145, 'Clean', 50, 5, 4),
-		(250, 'Dirty', 75, 4, 3),
-        (400, 'Destroyed', 100, 3, 2),
-        (450, 'Smells', 125, 2, 1),
-        (245, 'There is shit everywhere!', 25, 1, 5);
+		(145, 'Clean', 50, 5),
+		(250, 'Dirty', 75, 4),
+        (400, 'Destroyed', 100, 3),
+        (450, 'Smells', 125, 2),
+        (245, 'There is shit everywhere!', 25, 1)
 
 INSERT INTO Stays (idSale, idGuest, idRoom, CheckedIn, CheckedOut, Rate)
 	VALUES
-		(5, 4, 3, '12/24/2019', '12/26/2019', 100),
+		(5, 4, 3, '12/24/2019', '03/03/2020', 100),
 		(4, 3, 2, '12/20/2019', '12/26/2019', 150),
 		(3, 2, 1, '11/26/2019', '12/26/2019', 125),
 		(2, 1, 5, '11/27/2019', '12/26/2019', 175),
@@ -572,7 +570,7 @@ SELECT * FROM dbo.RoomOpen('12/19/2019')
 
 --6
 GO
-IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
+ IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.PriceRange;
 GO 
 CREATE FUNCTION dbo.PriceRange (@min DECIMAL(5,2), @max DECIMAL(5,2))
@@ -613,15 +611,15 @@ SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
 			BEGIN 
 			SET @newTavernid = (@tavernid + 1);
 			END
-/*Can't get INSERT to work. Error message says "Must declare the scalar variable '@cost'" when I'm pretty sure
-  It's declared...*/
+EXECUTE dbo.CreateARoom @Cost = Rooms.Cost
+/*Can't get INSERT to work. Error message says "Must declare the scalar variable '@cost'"*/
 INSERT INTO Rooms (Cost, idTavern)
 	VALUES
 		((@cost - 0.01), @newtavernid);
 
+
 SELECT * FROM Rooms;
 
-GO
 IF OBJECT_ID('dbo.book_cheap_room',N'P') IS NOT NULL
 	DROP PROCEDURE dbo.book_cheap_room;
 GO
@@ -647,10 +645,12 @@ GO
 BEGIN TRANSACTION
 EXEC dbo.book_cheap_room
 @Guest = 'William Tate',
-@Min = 30,
+@Min = 76,
 @Max = 999,
 @book = '',
 @checkout = ''
 GO
 ROLLBACK
 select * from stays
+
+
