@@ -620,3 +620,37 @@ INSERT INTO Rooms (Cost, idTavern)
 		((@cost - 0.01), @newtavernid);
 
 SELECT * FROM Rooms;
+
+GO
+IF OBJECT_ID('dbo.book_cheap_room',N'P') IS NOT NULL
+	DROP PROCEDURE dbo.book_cheap_room;
+GO
+CREATE PROCEDURE dbo.book_cheap_room @Guest varchar(50), @Min DECIMAL(5,2), @Max DECIMAL(5,2), @Book Date , @checkout Date         
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	SET @Book = getdate();
+	SET @checkout = getdate() + 3; 
+	INSERT INTO Stays (Idroom, IDguest, CheckedIn, CheckedOut, Rate )
+	VALUES (	
+		(SELECT TOP 1 ID FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
+			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) Order BY cost ASC),
+		(SELECT ID FROM Guests WHERE Name Like @Guest),
+		@Book,
+		@checkout,
+		(SELECT TOP 1 cost FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
+			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) Order BY cost ASC)
+	)
+END
+GO
+
+BEGIN TRANSACTION
+EXEC dbo.book_cheap_room
+@Guest = 'William Tate',
+@Min = 30,
+@Max = 999,
+@book = '',
+@checkout = ''
+GO
+ROLLBACK
+select * from stays
