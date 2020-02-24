@@ -628,10 +628,11 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	SET @Book = getdate();
-	SET @checkout = getdate() + 3; 
-	INSERT INTO Stays (Idroom, IDguest, CheckedIn, CheckedOut, Rate )
+	SET @checkout = getdate() + 3;
+	INSERT INTO Stays (idSale, idRoom, idGuest, CheckedIn, CheckedOut, Rate )
 	VALUES (	
-		(SELECT TOP 1 ID FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
+		(SELECT TOP 1 id FROM Sales ORDER BY id desc),
+		(SELECT TOP 1 id FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
 			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) Order BY cost ASC),
 		(SELECT ID FROM Guests WHERE Name Like @Guest),
 		@Book,
@@ -653,4 +654,19 @@ GO
 ROLLBACK
 select * from stays
 
+GO
+
+DROP TRIGGER addSaleBooking
+GO
+CREATE TRIGGER addSaleBooking
+ON Stays
+AFTER INSERT
+AS 
+
+INSERT INTO Sales (Price, DatePurchased) SELECT Rate, CheckedIn
+FROM inserted;
+
+GO
+
+SELECT * FROM Sales
 
