@@ -516,18 +516,18 @@ CREATE FUNCTION dbo.GetBrackets (@level int)
 RETURNS varchar(50)  
 AS    
 BEGIN
-DECLARE @ret int;
+	DECLARE @lev int;
 	DECLARE @label varchar(50);  
-SELECT @ret = (@level)   
-    IF (@ret < 10)
+SELECT @lev = (@level)   
+    IF (@lev < 10)
 		SET @label = 'Noob';
-	IF (@ret BETWEEN 10 AND 19)
+	IF (@lev BETWEEN 10 AND 19)
 		SET @label = 'Intermediate';
-	IF (@ret BETWEEN 20 AND 29)
+	IF (@lev BETWEEN 20 AND 29)
 		SET @label = 'Pro';
-	IF (@ret BETWEEN 30 AND 39)
+	IF (@lev BETWEEN 30 AND 39)
 		SET @label = 'Expert';
-	IF (@ret >= 40)
+	IF (@lev >= 40)
 		SET @label = 'Master';
 RETURN @label;
 END;
