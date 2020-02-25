@@ -594,36 +594,44 @@ GO
 CREATE PROCEDURE dbo.CreateARoom
 	@cost DECIMAL(5,2),
 	@tavernsname varchar(50),
-	@tavernid int,
-	@newtavernid int
+	@tavernid int
 AS
+BEGIN
+SET NOCOUNT ON;
 SET @cost = (SELECT MIN(Cost) FROM dbo.PriceRange(80, 130));
 SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130) AS NewRoom
 	WHERE Cost = (
         SELECT MIN(Cost)
         FROM dbo.PriceRange(80, 130)));
 SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
-	IF (@tavernid = (Select COUNT(*) FROM Taverns))
-			BEGIN
-			SET @newtavernid = (@tavernid - (@tavernid - 1));
-			END   
-			ELSE 
-			BEGIN 
-			SET @newTavernid = (@tavernid + 1);
-			END
-EXECUTE dbo.CreateARoom @Cost = Rooms.Cost
-/*Can't get INSERT to work. Error message says "Must declare the scalar variable '@cost'"*/
 INSERT INTO Rooms (Cost, idTavern)
-	VALUES
-		((@cost - 0.01), @newtavernid);
+	VALUES (@Cost - 0.01, @Tavernid)		
+END
 
+BEGIN TRANSACTION
+EXECUTE dbo.CreateARoom
+@Cost = 80,
+@Tavernsname = '',
+@Tavernid = ''
+
+ROLLBACK
+
+GO
+
+--Procedure for booking cheapest room
 
 SELECT * FROM Rooms;
+SELECT * FROM Taverns;
 
 IF OBJECT_ID('dbo.book_cheap_room',N'P') IS NOT NULL
 	DROP PROCEDURE dbo.book_cheap_room;
 GO
-CREATE PROCEDURE dbo.book_cheap_room @Guest varchar(50), @Min DECIMAL(5,2), @Max DECIMAL(5,2), @Book Date , @checkout Date         
+CREATE PROCEDURE dbo.book_cheap_room
+	@Guest varchar(50),
+	@Min DECIMAL(5,2),
+	@Max DECIMAL(5,2),
+	@Book Date,
+	@checkout Date         
 AS 
 BEGIN
 	SET NOCOUNT ON;
@@ -633,12 +641,12 @@ BEGIN
 	VALUES (	
 		(SELECT TOP 1 id FROM Sales ORDER BY id desc),
 		(SELECT TOP 1 id FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
-			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) Order BY cost ASC),
+			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) ORDER BY cost ASC),
 		(SELECT ID FROM Guests WHERE Name Like @Guest),
 		@Book,
 		@checkout,
 		(SELECT TOP 1 cost FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
-			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) Order BY cost ASC)
+			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) ORDER BY cost ASC)
 	)
 END
 GO
@@ -663,10 +671,9 @@ ON Stays
 AFTER INSERT
 AS 
 
-INSERT INTO Sales (Price, DatePurchased) SELECT Rate, CheckedIn
+INSERT INTO Sales (Name, Price, DatePurchased) SELECT Rate, CheckedIn
 FROM inserted;
 
 GO
 
 SELECT * FROM Sales
-
