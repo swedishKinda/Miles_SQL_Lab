@@ -371,13 +371,13 @@ SELECT CONCAT ('INSERT INTO ',TABLE_NAME,' (Name, Floors)') AS InsertCommands
 	FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Taverns'
 		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 1), ', ',
-						   (SELECT Country FROM locationAddress WHERE id = 1), ')')
+						   (SELECT Country FROM locationAddress WHERE id = 1), '),')
 		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 2), ', ',
-						   (SELECT Country FROM locationAddress WHERE id = 2), ')')
+						   (SELECT Country FROM locationAddress WHERE id = 2), '),')
 		UNION ALL
 SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 3), ', ',
-						   (SELECT Country FROM locationAddress WHERE id = 3), ')');
+						   (SELECT Country FROM locationAddress WHERE id = 3), ');');
 
 /*HW4*/
 
