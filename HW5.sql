@@ -31,9 +31,9 @@ BEGIN
 END;
 GO
 --How can I get the idClass's column to collapse on duplicates?
-SELECT Levels.idGuest, Guests.Name, Classes.Name, Levels.idClass, dbo.TotalGuestsPerClass(idClass) AS TotalGuestsPerClass FROM Levels
+SELECT DISTINCT Classes.Name, Levels.idGuest, Guests.Name, Levels.idClass, dbo.TotalGuestsPerClass(idClass) AS TotalGuestsPerClass FROM Classes
+	INNER JOIN Levels ON (Levels.idClass = Classes.id)
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
-	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		GROUP BY Levels.idGuest, Levels.idClass, Guests.Name, Classes.Name, dbo.TotalGuestsPerClass(idClass)
 
 SELECT * FROM LEVELS
