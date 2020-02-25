@@ -1,16 +1,12 @@
 /*HW3*/
 
 --2:
-SELECT * From Rooms
-EXCEPT
-SELECT * From Rooms
-WHERE Cost <= 100;
+SELECT * From Guests
+WHERE Birthday < '01/01/2000';
 
 --3:
-SELECT * From Guests
-EXCEPT
-SELECT * From Guests
-WHERE Birthday > '01/01/2000';
+SELECT * From Rooms
+WHERE Cost > 100;
 
 --4:
 SELECT DISTINCT Name From Guests;
