@@ -637,7 +637,8 @@ BEGIN
 	SET @Book = getdate();
 	SET @checkout = getdate() + 3;
 	INSERT INTO Stays (idSale, idRoom, idGuest, CheckedIn, CheckedOut, Rate )
-	VALUES (	
+	VALUES (
+		--I want this sales select to add plus 1 to but keep getting some "id error"	
 		(SELECT TOP 1 id FROM Sales ORDER BY id desc),
 		(SELECT TOP 1 id FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
 			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) ORDER BY cost ASC),
