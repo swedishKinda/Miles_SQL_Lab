@@ -380,7 +380,7 @@ SELECT CONCAT ('VALUES (', (SELECT Name FROM locationAddress WHERE id = 3), ', '
 --1
 SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription FROM OwnerUserName 
 	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
-		WHERE RoleOwners.RoleDescription LIKE '%admin%';
+		WHERE RoleOwners.RoleDescription LIKE 'admin%';
 
 --2
 SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name,
@@ -388,7 +388,7 @@ SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name,
 		INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 		INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
 		INNER JOIN locationAddress ON (Taverns.idLocation = locationAddress.id)
-			WHERE RoleOwners.RoleDescription LIKE '%admin%'
+			WHERE RoleOwners.RoleDescription LIKE 'admin%';
 
 --3
 SELECT Guests.Name, Classes.Name, Level FROM Levels 
@@ -442,7 +442,7 @@ SELECT CONCAT(cols.COLUMN_NAME, ' ', cols.DATA_TYPE,
 			(CONCAT(' FOREIGN KEY REFERENCES ', constKeys.TABLE_NAME, '(', constKeys.COLUMN_NAME, ')')) 
 			Else '' 
 			END,
-				CASE WHEN keys.CONSTRAINT_NAME LIKE '%PK%'
+				CASE WHEN keys.CONSTRAINT_NAME LIKE 'PK%'
 				THEN
 					(' IDENTITY(1,1) PRIMARY KEY')
 				ELSE ''
