@@ -4,20 +4,20 @@ ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, 
 DROP TABLE IF EXISTS Stays;
 DROP TABLE IF EXISTS Rooms;
 DROP TABLE IF EXISTS SalesSupplyLinking;
-DROP TABLE IF EXISTS GuestClass;
---DROP TABLE IF EXISTS Classes;
-DROP TABLE IF EXISTS GuestStatuses;
 DROP TABLE IF EXISTS Levels;
+DROP TABLE IF EXISTS Classes;
 DROP TABLE IF EXISTS Guests;
+DROP TABLE IF EXISTS GuestStatuses;
 DROP TABLE IF EXISTS Sales;
-DROP TABLE IF EXISTS ServiceStatus;
 DROP TABLE IF EXISTS Services;
+DROP TABLE IF EXISTS ServiceStatus;
 DROP TABLE IF EXISTS SuppliesReceived;
 DROP TABLE IF EXISTS Supplies;
 DROP TABLE IF EXISTS taverns;
-DROP TABLE IF EXISTS RoleOwners;
 DROP TABLE IF EXISTS OwnerUserName;
+DROP TABLE IF EXISTS RoleOwners;
 DROP TABLE IF EXISTS locationAddress;
+
 
 CREATE TABLE taverns (
     id int IDENTITY(1,1) PRIMARY KEY,
@@ -109,11 +109,11 @@ CREATE TABLE Levels (
     DateLevel DATE
 );
 
-/*CREATE TABLE Classes (
+CREATE TABLE Classes (
     id tinyint IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR (50),
 	DescriptionClass VARCHAR (500)
-);*/
+);
 
 CREATE TABLE SalesSupplyLinking (
 	idSales int,
@@ -139,35 +139,6 @@ CREATE TABLE Stays (
 );
 
 
-ALTER TABLE taverns ADD FOREIGN KEY (idLocation) REFERENCES locationAddress(id);
-ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(id);
-
-ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(id);
-
-ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
-
-ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
-ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
-
-ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(id);
-ALTER TABLE Services ADD FOREIGN KEY (idTavern) REFERENCES Taverns(id);
-
-ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
-
-ALTER TABLE Levels ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
-ALTER TABLE Levels ADD FOREIGN KEY (idClass) REFERENCES Classes(id);
-
---ALTER TABLE Supplies ADD Units VARCHAR(50);
---ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
-
-ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(id);
-ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
-
-ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
-
-ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(id);
-ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
-ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(id);
 
 INSERT INTO taverns (Name, Floors, idOwner, idLocation)
     VALUES
@@ -277,13 +248,13 @@ INSERT INTO Levels (idGuest, idClass, Level, DateLevel)
 		(5, 3, 21, '01/25/2020'),
 		(4, 2, 12, '01/20/2020');
 
-/*INSERT INTO Classes (Name, DescriptionClass)
+INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
 		('Knight', 'Slays monsters'),
 		('Mage', 'Uses Magic'),
 		('Archer', 'Shoots Shit'),
 		('Squire', 'Apprentice to Knight'),
-		('Alchemist', 'Makes potions');*/
+		('Alchemist', 'Makes potions');
 
 INSERT INTO SalesSupplyLinking (idSales, idSupplies)
 	VALUES
@@ -309,13 +280,44 @@ INSERT INTO Stays (idSale, idGuest, idRoom, CheckedIn, CheckedOut, Rate)
 		(2, 1, 5, '11/27/2019', '12/26/2019', 175),
 		(1, 5, 4, '11/15/2019', '11/20/2019', 200);
 
+
+ALTER TABLE taverns ADD FOREIGN KEY (idLocation) REFERENCES locationAddress(id);
+ALTER TABLE taverns ADD FOREIGN KEY (idOwner) REFERENCES OwnerUserName(id);
+
+ALTER TABLE OwnerUserName ADD FOREIGN KEY (idRole) REFERENCES RoleOwners(id);
+
+ALTER TABLE Supplies ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
+
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
+ALTER TABLE SuppliesReceived ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
+
+ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus(id);
+ALTER TABLE Services ADD FOREIGN KEY (idTavern) REFERENCES Taverns(id);
+
+ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
+
+ALTER TABLE Levels ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
+ALTER TABLE Levels ADD FOREIGN KEY (idClass) REFERENCES Classes(id);
+
+--ALTER TABLE Supplies ADD Units VARCHAR(50);
+--ALTER TABLE SuppliesReceived ADD UnitsReceived VARCHAR(50);
+
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(id);
+ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
+
+ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
+
+ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(id);
+ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
+ALTER TABLE Stays ADD FOREIGN KEY (idRoom) REFERENCES Rooms(id);
+
+
 SELECT * FROM taverns;
 SELECT * FROM locationAddress;
 SELECT * FROM OwnerUserName;
 SELECT * FROM RoleOwners;
-SELECT * FROM Floors;
 SELECT * FROM Supplies;
-SELECT * FROM SuppliesRecieved;
+SELECT * FROM SuppliesReceived;
 SELECT * FROM Services;
 SELECT * FROM ServiceStatus;
 SELECT * FROM Sales;
@@ -549,6 +551,8 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level, dbo.GetBrackets(Level
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		ORDER BY Guests.Name asc;
 	
+--5
+GO
 IF OBJECT_ID (N'dbo.RoomOpen', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.RoomOpen;
 GO 
