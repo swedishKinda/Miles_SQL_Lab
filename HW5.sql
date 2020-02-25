@@ -1,5 +1,3 @@
-/*HW5*/
-
 --1
 SELECT OwnerUserName.Name, RoleOwners.Name, RoleOwners.RoleDescription FROM OwnerUserName
 	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
@@ -84,8 +82,6 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level, dbo.GetBrackets(Level
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		ORDER BY Guests.Name asc;
 	
---5
-GO
 IF OBJECT_ID (N'dbo.RoomOpen', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.RoomOpen;
 GO 
@@ -94,18 +90,19 @@ RETURNS TABLE
 AS
 RETURN
 (
-	SELECT R.Number, T.Name, R.idTavern, R.id AS idRoom
-	FROM Stays AS S
-		INNER JOIN Rooms AS R ON R.id = S.idRoom
-		INNER JOIN Taverns AS T ON T.id = R.idTavern
-	WHERE @vacant NOT BETWEEN S.CheckedIn AND S.Checkedout
+	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id
+	FROM Stays
+		INNER JOIN Rooms ON Rooms.id = Stays.idRoom
+		INNER JOIN Taverns ON Taverns.id = Rooms.idTavern
+	WHERE @vacant NOT BETWEEN Stays.CheckedIn AND Stays.Checkedout
 );
 GO
-SELECT * FROM dbo.RoomOpen('12/19/2019')
+SELECT * FROM dbo.RoomOpen('2019-12-21');
+SELECT * FROM Stays
 
 --6
 GO
-IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
+ IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.PriceRange;
 GO 
 CREATE FUNCTION dbo.PriceRange (@min DECIMAL(5,2), @max DECIMAL(5,2))
@@ -113,11 +110,11 @@ RETURNS TABLE
 AS
 RETURN
 (
-	SELECT R.Number, T.Name, R.idTavern, R.id, R.Cost
-	FROM Rooms AS R
-		INNER JOIN Stays AS S ON R.id = S.idRoom
-		INNER JOIN Taverns AS T ON T.id = R.idTavern
-	WHERE R.Cost BETWEEN @min AND @max
+	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id, Rooms.Cost
+	FROM Rooms
+		INNER JOIN Stays ON Rooms.id = Stays.idRoom
+		INNER JOIN Taverns ON Taverns.id = Rooms.idTavern
+	WHERE Rooms.Cost BETWEEN @min AND @max
 );
 GO
 SELECT * FROM dbo.PriceRange(80, 130)
@@ -129,27 +126,26 @@ GO
 CREATE PROCEDURE dbo.CreateARoom
 	@cost DECIMAL(5,2),
 	@tavernsname varchar(50),
-	@tavernid int,
-	@newtavernid int
+	@tavernid int
 AS
+BEGIN
+SET NOCOUNT ON;
 SET @cost = (SELECT MIN(Cost) FROM dbo.PriceRange(80, 130));
 SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130) AS NewRoom
 	WHERE Cost = (
         SELECT MIN(Cost)
         FROM dbo.PriceRange(80, 130)));
 SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
-	IF (@tavernid = (Select COUNT(*) FROM Taverns))
-			BEGIN
-			SET @newtavernid = (@tavernid - (@tavernid - 1));
-			END   
-			ELSE 
-			BEGIN 
-			SET @newTavernid = (@tavernid + 1);
-			END
-/*Can't get INSERT to work. Error message says "Must declare the scalar variable '@cost'" when I'm pretty sure
-  It's declared...*/
 INSERT INTO Rooms (Cost, idTavern)
-	VALUES
-		((@cost - 0.01), @newtavernid);
+	VALUES (@Cost - 0.01, @Tavernid)		
+END
 
-SELECT * FROM Rooms;
+BEGIN TRANSACTION
+EXECUTE dbo.CreateARoom
+@Cost = 80,
+@Tavernsname = '',
+@Tavernid = ''
+
+ROLLBACK
+
+GO
