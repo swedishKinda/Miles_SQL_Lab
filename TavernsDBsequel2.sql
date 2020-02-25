@@ -670,7 +670,7 @@ ON Stays
 AFTER INSERT
 AS 
 
-INSERT INTO Sales (Name, Price, DatePurchased) SELECT Rate, CheckedIn
+INSERT INTO Sales (Price, DatePurchased) SELECT Rate, CheckedIn
 FROM inserted;
 
 GO
