@@ -367,7 +367,7 @@ SELECT TOP 10 * FROM Sales ORDER BY Price desc;
 
 --7
 SELECT TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name')
+		WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
 --I'm not sure if this is what you're asking for.
 
 --8
@@ -406,7 +406,7 @@ SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name,
 		INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 		INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
 		INNER JOIN locationAddress ON (Taverns.idLocation = locationAddress.id)
-			WHERE RoleOwners.RoleDescription LIKE 'admin%'
+			WHERE RoleOwners.RoleDescription LIKE 'admin%';
 
 --3
 SELECT Guests.Name, Classes.Name, Level FROM Levels 
@@ -483,13 +483,13 @@ FROM INFORMATION_SCHEMA.COLUMNS as cols
 
 --1
 SELECT OwnerUserName.Name, RoleOwners.Name, RoleOwners.RoleDescription FROM OwnerUserName
-	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
+	INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id);
 
 --2
 --As query
 SELECT Classes.Name, COUNT(Levels.idClass) AS GuestsPerClass FROM Levels
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		GROUP BY Classes.Name
+		GROUP BY Classes.Name;
 
 --As function(for fun)
 IF OBJECT_ID (N'dbo.TotalGuestsPerClass', N'FN') IS NOT NULL  
@@ -511,7 +511,7 @@ GO
 
 SELECT Classes.Name, dbo.TotalGuestsPerClass(idClass) AS GuestsPerClass FROM Levels
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
-		GROUP BY Classes.Name, Levels.idClass
+		GROUP BY Classes.Name, Levels.idClass;
 
 --3
 SELECT idGuest, Guests.Name, idClass, Classes.Name, Level,
@@ -576,7 +576,7 @@ RETURN
 );
 GO
 SELECT * FROM dbo.RoomOpen('2019-12-21');
-SELECT * FROM Stays
+SELECT * FROM Stays;
 
 --6
 GO
@@ -595,8 +595,8 @@ RETURN
 	WHERE Rooms.Cost BETWEEN @min AND @max
 );
 GO
-SELECT * FROM dbo.PriceRange(80, 130)
-SELECT * FROM Rooms
+SELECT * FROM dbo.PriceRange(80, 130);
+SELECT * FROM Rooms;
 
 --7
 IF OBJECT_ID (N'dbo.CreateARoom', N'P') IS NOT NULL  
@@ -619,21 +619,21 @@ SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130)
 SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
 INSERT INTO Rooms (Number, Cost, idTavern)
 	VALUES (@newnumber - 1, @Cost - 0.01, @Tavernid)		
-END
+END;
 
 BEGIN TRANSACTION
 EXECUTE dbo.CreateARoom
 @Cost = 80,
 @newNumber = 1,
 @Tavernsname = '',
-@Tavernid = ''
+@Tavernid = '';
 
 ROLLBACK
 
 COMMIT
 
 GO
-SELECT * FROM Rooms
+SELECT * FROM Rooms;
 
 --Procedure for booking cheapest room
 
@@ -665,7 +665,7 @@ BEGIN
 		(SELECT TOP 1 cost FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
 			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) ORDER BY cost ASC)
 	)
-END
+END;
 GO
 
 BEGIN TRANSACTION
@@ -674,10 +674,10 @@ EXEC dbo.book_cheap_room
 @Min = 76,
 @Max = 999,
 @book = '',
-@checkout = ''
+@checkout = '';
 GO
 ROLLBACK
-select * from stays
+select * from stays;
 
 GO
 
@@ -693,4 +693,4 @@ FROM inserted;
 
 GO
 
-SELECT * FROM Sales
+SELECT * FROM Sales;
