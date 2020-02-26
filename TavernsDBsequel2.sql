@@ -123,9 +123,14 @@ CREATE TABLE SalesSupplyLinking (
 CREATE TABLE Rooms (
 	id int IDENTITY(1,1) PRIMARY KEY,
 	Number int,
-	StatusRoom VARCHAR(100),
 	Cost DECIMAL(5,2),
-	idTavern int
+	idTavern int,
+	idRoomStatus int
+);
+
+CREATE TABLE RoomStatus (
+	id int IDENTITY(1,1) PRIMARY KEY,
+	Name VARCHAR(50)
 );
 
 CREATE TABLE Stays (
@@ -264,13 +269,21 @@ INSERT INTO SalesSupplyLinking (idSales, idSupplies)
 		(2, 1),
 		(1, 5);
 
-INSERT INTO Rooms (Number, StatusRoom, Cost, idTavern)
+INSERT INTO Rooms (Number, Cost, idTavern, idRoomStatus)
 	VALUES
-		(145, 'Clean', 50, 5),
-		(250, 'Dirty', 75, 4),
-        (400, 'Destroyed', 100, 3),
-        (450, 'Smells', 125, 2),
-        (245, 'There is shit everywhere!', 25, 1)
+		(145, 50, 5, 1),
+		(250, 75, 4, 2),
+        (400, 100, 3, 3),
+        (450, 125, 2, 4),
+        (245, 25, 1, 5);
+
+INSERT INTO RoomStatus (Name)
+	Values
+		('Clean'),
+		('Dirty'),
+        ('Destroyed'),
+        ('Smells'),
+        ('There is shit everywhere!');
 
 INSERT INTO Stays (idSale, idGuest, idRoom, CheckedIn, CheckedOut, Rate)
 	VALUES
@@ -306,6 +319,7 @@ ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSales) REFERENCES Sales(id);
 ALTER TABLE SalesSupplyLinking ADD FOREIGN KEY (idSupplies) REFERENCES Supplies(id);
 
 ALTER TABLE Rooms ADD FOREIGN KEY (idTavern) REFERENCES taverns(id);
+ALTER TABLE Rooms ADD FOREIGN KEY (idRoomStatus) REFERENCES RoomStatus(id);
 
 ALTER TABLE Stays ADD FOREIGN KEY (idSale) REFERENCES Sales(id);
 ALTER TABLE Stays ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
