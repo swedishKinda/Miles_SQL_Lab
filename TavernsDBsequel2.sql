@@ -78,16 +78,6 @@ CREATE TABLE ServiceStatus (
     StatusofService BIT
 );
 
-CREATE TABLE Sales (
-    id int IDENTITY(1,1) PRIMARY KEY,
-    idServices int FOREIGN KEY REFERENCES Services(id),
-    Name VARCHAR(100),
-    Price DECIMAL(5,2),
-    DatePurchased DATETIME,
-    AmountPurchased int,
-    idTavern int FOREIGN KEY REFERENCES taverns(id)
-);
-
 CREATE TABLE Guests (
     id int IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(250),
@@ -95,6 +85,16 @@ CREATE TABLE Guests (
     Birthday DATE,
     CakeDay DATE,
 	idGuestStatuses tinyint
+);
+
+CREATE TABLE Sales (
+    id int IDENTITY(1,1) PRIMARY KEY,
+    idServices int,
+    idGuest int,
+    Price DECIMAL(5,2),
+    DatePurchased DATETIME,
+    AmountPurchased int,
+    idTavern int
 );
 
 CREATE TABLE GuestStatuses (
@@ -117,6 +117,7 @@ CREATE TABLE Classes (
 );
 
 CREATE TABLE SalesSupplyLinking (
+	id int IDENTITY(1,1) PRIMARY KEY,
 	idSales int,
 	idSupplies int
 );
@@ -210,23 +211,23 @@ INSERT INTO ServiceStatus (StatusofService)
         (0),
         (0);
 
-INSERT INTO Sales (idServices, Name, Price, DatePurchased, AmountPurchased, idTavern)
+INSERT INTO Sales (idServices, idGuest, Price, DatePurchased, AmountPurchased, idTavern)
     VALUES
-        (5, 'Dilan Bob', 22.29, '05/22/2013 00:00:00', 10, 1),
-        (4,'Stuart Bib', 22.28, '05/22/2013 00:00:00', 10, 2),
-        (3, 'Macho Man', 22.70, '05/22/2013 00:00:00', 10, 3),
-        (2, 'Jessica Collins', 22.26, '05/22/2013 00:00:00', 10, 4),
-        (1,'Milton Bradley', 22.25, '05/22/2013 00:00:00', 10, 5),
-		(1, 'Dilan Bob', 22.24, '05/22/2013 00:00:00', 10, 5),
-        (2, 'Stuart Bib', 22.23, '05/22/2013 00:00:00', 10, 4),
-        (3, 'Macho Man', 22.50, '05/22/2013 00:00:00', 10, 3),
-        (4, 'Jessica Collins', 22.21, '05/22/2013 00:00:00', 10, 2),
-        (5, 'Milton Bradley', 22.20, '05/22/2013 00:00:00', 10, 1),
-		(5, 'Dilan Bob', 22.19, '05/22/2013 00:00:00', 10, 1),
-        (4, 'Stuart Bib', 22.18, '05/22/2013 00:00:00', 10, 2),
-        (3, 'Macho Man', 22.17, '05/22/2013 00:00:00', 10, 3),
-        (2, 'Jessica Collins', 22.16, '05/22/2013 00:00:00', 10, 4),
-        (1, 'Milton Bradley', 42.15, '05/22/2013 00:00:00', 10, 5);
+        (5, 1, 22.29, '05/22/2013 00:00:00', 10, 1),
+        (4, 2, 22.28, '05/22/2013 00:00:00', 10, 2),
+        (3, 3, 22.70, '05/22/2013 00:00:00', 10, 3),
+        (2, 4, 22.26, '05/22/2013 00:00:00', 10, 4),
+        (1, 5, 22.25, '05/22/2013 00:00:00', 10, 5),
+		(1, 1, 22.24, '05/22/2013 00:00:00', 10, 5),
+        (2, 2, 22.23, '05/22/2013 00:00:00', 10, 4),
+        (3, 3, 22.50, '05/22/2013 00:00:00', 10, 3),
+        (4, 4, 22.21, '05/22/2013 00:00:00', 10, 2),
+        (5, 5, 22.20, '05/22/2013 00:00:00', 10, 1),
+		(5, 1, 22.19, '05/22/2013 00:00:00', 10, 1),
+        (4, 2, 22.18, '05/22/2013 00:00:00', 10, 2),
+        (3, 3, 22.17, '05/22/2013 00:00:00', 10, 3),
+        (2, 4, 22.16, '05/22/2013 00:00:00', 10, 4),
+        (1, 5, 42.15, '05/22/2013 00:00:00', 10, 5);
 
 INSERT INTO Guests (Name, Notes, Birthday, CakeDay, idGuestStatuses)
 	Values
@@ -310,6 +311,10 @@ ALTER TABLE Services ADD FOREIGN KEY (idServicesStatus) REFERENCES ServiceStatus
 ALTER TABLE Services ADD FOREIGN KEY (idTavern) REFERENCES Taverns(id);
 
 ALTER TABLE Guests ADD FOREIGN KEY (idGuestStatuses) REFERENCES GuestStatuses(id);
+
+ALTER TABLE Sales ADD FOREIGN KEY (idServices) REFERENCES Services(id);
+ALTER TABLE Sales ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
+ALTER TABLE Sales ADD FOREIGN KEY (idTavern) REFERENCES Taverns(id);
 
 ALTER TABLE Levels ADD FOREIGN KEY (idGuest) REFERENCES Guests(id);
 ALTER TABLE Levels ADD FOREIGN KEY (idClass) REFERENCES Classes(id);
@@ -693,4 +698,5 @@ FROM inserted;
 
 GO
 
+SELECT *FROM Stays;
 SELECT * FROM Sales;
