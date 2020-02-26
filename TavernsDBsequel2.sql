@@ -694,10 +694,11 @@ ON Stays
 AFTER INSERT
 AS 
 
-INSERT INTO Sales (idGuest, Price, DatePurchased) SELECT idGuest, Rate, CheckedIn
-FROM inserted;
+INSERT INTO Sales (idGuest, Price, DatePurchased, idTavern) SELECT idGuest, Rate, CheckedIn, idTavern FROM inserted
+	INNER JOIN Rooms ON (inserted.idRoom = Rooms.id);
 
 GO
 
-SELECT *FROM Stays;
+SELECT * FROM Stays;
 SELECT * FROM Sales;
+SELECT * FROM Rooms;
