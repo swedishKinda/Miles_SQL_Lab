@@ -29,6 +29,7 @@ SELECT idGuest, idClass, Level,
 		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
 		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
 		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+		 WHEN Level IS NULL THEN 'Noob'
 END AS Brackets FROM Levels;
 
 --9

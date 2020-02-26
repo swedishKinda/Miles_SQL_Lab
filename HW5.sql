@@ -37,6 +37,7 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level,
 		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
 		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
 		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+		 WHEN Level IS NULL THEN 'Noob'
 END AS Brackets FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
@@ -63,7 +64,7 @@ DECLARE @label varchar(50);
 	IF (@level >= 40)
 		SET @label = 'Master';
 	IF (@level IS NULL)   
-			SET @level = 0;
+		SET @label = 'Noob';
 RETURN @label;
 END;
 
