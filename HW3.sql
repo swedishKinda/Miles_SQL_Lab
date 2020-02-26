@@ -19,7 +19,7 @@ SELECT TOP 10 * FROM Sales ORDER BY Price desc;
 
 --7
 SELECT TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name')
+		WHERE (COLUMN_NAME = 'id' OR COLUMN_NAME = 'Name');
 --I'm not sure if this is what you're asking for.
 
 --8
