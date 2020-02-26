@@ -597,24 +597,27 @@ IF OBJECT_ID (N'dbo.CreateARoom', N'P') IS NOT NULL
 GO
 CREATE PROCEDURE dbo.CreateARoom
 	@cost DECIMAL(5,2),
+	@newnumber int,
 	@tavernsname varchar(50),
 	@tavernid int
 AS
 BEGIN
 SET NOCOUNT ON;
 SET @cost = (SELECT MIN(Cost) FROM dbo.PriceRange(80, 130));
-SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130) AS NewRoom
+SET @newnumber = (SELECT TOP 1 Number FROM dbo.PriceRange(80, 130));
+SET @tavernsname = (SELECT TOP 1 Name FROM dbo.PriceRange(80, 130)
 	WHERE Cost = (
         SELECT MIN(Cost)
         FROM dbo.PriceRange(80, 130)));
 SET @tavernid = (SELECT id FROM Taverns WHERE @tavernsname = Name);
-INSERT INTO Rooms (Cost, idTavern)
-	VALUES (@Cost - 0.01, @Tavernid)		
+INSERT INTO Rooms (Number, Cost, idTavern)
+	VALUES (@newnumber - 1, @Cost - 0.01, @Tavernid)		
 END
 
 BEGIN TRANSACTION
 EXECUTE dbo.CreateARoom
 @Cost = 80,
+@newNumber = 1,
 @Tavernsname = '',
 @Tavernid = ''
 
