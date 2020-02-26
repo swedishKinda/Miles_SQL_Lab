@@ -62,6 +62,8 @@ DECLARE @label varchar(50);
 		SET @label = 'Expert';
 	IF (@level >= 40)
 		SET @label = 'Master';
+	IF (@level IS NULL)   
+			SET @level = 0;
 RETURN @label;
 END;
 
