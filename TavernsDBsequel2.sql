@@ -340,6 +340,7 @@ SELECT * FROM GuestStatuses;
 SELECT * FROM Levels;
 SELECT * FROM Classes;
 SELECT * FROM Rooms;
+SELECT * FROM RoomStatus;
 SELECT * FROM Stays;
 
 
