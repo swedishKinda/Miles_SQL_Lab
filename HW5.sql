@@ -72,6 +72,8 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level, dbo.GetBrackets(Level
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
 		ORDER BY Guests.Name asc;
 	
+--5
+GO
 IF OBJECT_ID (N'dbo.RoomOpen', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.RoomOpen;
 GO 
@@ -80,10 +82,10 @@ RETURNS TABLE
 AS
 RETURN
 (
-	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id
+	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id AS idRoom
 	FROM Stays
-		INNER JOIN Rooms ON Rooms.id = Stays.idRoom
-		INNER JOIN Taverns ON Taverns.id = Rooms.idTavern
+		INNER JOIN Rooms ON (Rooms.id = Stays.idRoom)
+		INNER JOIN Taverns ON (Taverns.id = Rooms.idTavern)
 	WHERE @vacant NOT BETWEEN Stays.CheckedIn AND Stays.Checkedout
 );
 GO
@@ -92,7 +94,7 @@ SELECT * FROM Stays
 
 --6
 GO
- IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
+IF OBJECT_ID (N'dbo.PriceRange', N'IF') IS NOT NULL
 	DROP FUNCTION dbo.PriceRange;
 GO 
 CREATE FUNCTION dbo.PriceRange (@min DECIMAL(5,2), @max DECIMAL(5,2))
@@ -102,8 +104,8 @@ RETURN
 (
 	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id, Rooms.Cost
 	FROM Rooms
-		INNER JOIN Stays ON Rooms.id = Stays.idRoom
-		INNER JOIN Taverns ON Taverns.id = Rooms.idTavern
+		INNER JOIN Stays ON (Rooms.id = Stays.idRoom)
+		INNER JOIN Taverns ON (Taverns.id = Rooms.idTavern)
 	WHERE Rooms.Cost BETWEEN @min AND @max
 );
 GO
