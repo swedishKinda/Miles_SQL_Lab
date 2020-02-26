@@ -3,6 +3,7 @@ ServiceStatus, Services, SuppliesReceived, Supplies, RoleOwners, OwnerUserName, 
 
 DROP TABLE IF EXISTS Stays;
 DROP TABLE IF EXISTS Rooms;
+DROP TABLE IF EXISTS RoomStatus;
 DROP TABLE IF EXISTS SalesSupplyLinking;
 DROP TABLE IF EXISTS Levels;
 DROP TABLE IF EXISTS Classes;
@@ -251,7 +252,8 @@ INSERT INTO Levels (idGuest, idClass, Level, DateLevel)
 		(2, 1, 35, '02/04/2020'),
 		(1, 5, 45, '02/05/2020'),
 		(5, 3, 21, '01/25/2020'),
-		(4, 2, 12, '01/20/2020');
+		(4, 2, 12, '01/20/2020'),
+		(3, 3, NULL, '01/21/2020');
 
 INSERT INTO Classes (Name, DescriptionClass)
 	VALUES
@@ -375,6 +377,7 @@ SELECT idGuest, idClass, Level,
 		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
 		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
 		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+		 WHEN Level IS NULL THEN 'Noob'
 END AS Brackets FROM Levels;
 
 --9
@@ -403,7 +406,7 @@ SELECT OwnerUserName.Name, RoleOwners.Name, RoleDescription, Taverns.Name,
 		INNER JOIN RoleOwners ON (OwnerUserName.idRole = RoleOwners.id)
 		INNER JOIN taverns ON (OwnerUserName.id = Taverns.idOwner)
 		INNER JOIN locationAddress ON (Taverns.idLocation = locationAddress.id)
-			WHERE RoleOwners.RoleDescription LIKE 'admin%';
+			WHERE RoleOwners.RoleDescription LIKE 'admin%'
 
 --3
 SELECT Guests.Name, Classes.Name, Level FROM Levels 
@@ -517,6 +520,7 @@ SELECT idGuest, Guests.Name, idClass, Classes.Name, Level,
 		 WHEN Level BETWEEN 21 and 30 THEN 'Pro'
 		 WHEN Level BETWEEN 31 and 40 THEN 'Expert'
 		 WHEN Level BETWEEN 41 and 50 THEN 'Master'
+		 WHEN Level IS NULL THEN 'Noob'
 END AS Brackets FROM Levels 
 	INNER JOIN Guests ON (Levels.idGuest = Guests.id)
 	INNER JOIN Classes ON (Levels.idClass = Classes.id)
@@ -543,7 +547,7 @@ DECLARE @label varchar(50);
 	IF (@level >= 40)
 		SET @label = 'Master';
 	IF (@level IS NULL)   
-			SET @level = 0;
+		SET @label = 'Noob';
 RETURN @label;
 END;
 
@@ -584,7 +588,7 @@ RETURNS TABLE
 AS
 RETURN
 (
-	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id, Rooms.Cost
+	SELECT Rooms.Number, Taverns.Name, Rooms.idTavern, Rooms.id AS idRoom, Rooms.idRoomStatus, Rooms.Cost
 	FROM Rooms
 		INNER JOIN Stays ON (Rooms.id = Stays.idRoom)
 		INNER JOIN Taverns ON (Taverns.id = Rooms.idTavern)
@@ -592,6 +596,7 @@ RETURN
 );
 GO
 SELECT * FROM dbo.PriceRange(80, 130)
+SELECT * FROM Rooms
 
 --7
 IF OBJECT_ID (N'dbo.CreateARoom', N'P') IS NOT NULL  
@@ -625,7 +630,10 @@ EXECUTE dbo.CreateARoom
 
 ROLLBACK
 
+COMMIT
+
 GO
+SELECT * FROM Rooms
 
 --Procedure for booking cheapest room
 
@@ -647,8 +655,7 @@ BEGIN
 	SET @Book = getdate();
 	SET @checkout = getdate() + 3;
 	INSERT INTO Stays (idSale, idRoom, idGuest, CheckedIn, CheckedOut, Rate )
-	VALUES (
-		--I want this sales select to add plus 1 to but keep getting some "id error"	
+	VALUES (	
 		(SELECT TOP 1 id FROM Sales ORDER BY id desc),
 		(SELECT TOP 1 id FROM ROOMS WHERE number IN  (SELECT number FROM dbo.RoomOpen(@Book))
 			AND number IN (SELECT number FROM dbo.PriceRange(@Min, @Max)) ORDER BY cost ASC),
